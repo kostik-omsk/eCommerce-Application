@@ -36,6 +36,8 @@
     "test": "jest",
     "dev": "vite development",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "coverage": "jest --coverage",
+    "watch": "jest --watch"
   }
 }
