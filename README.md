@@ -1,1 +1,1 @@
-# Final-Task-RSS-Temp-Name
+Rolling Scopes School eCommerce Application for final task.
