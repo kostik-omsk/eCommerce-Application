@@ -1,29 +1,26 @@
-Rolling Scopes School eCommerce Application for final task.
+## Project
+Rolling Scopes School eCommerce Application for final task.  
 
-# React + TypeScript + Vite
+## Project purpose
+The purpose of an ecommerce application is to facilitate online commercial transactions, allowing businesses to sell products or services to customers over the internet.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## The technology stack
+The technology stack used in this project is React + TypeScript + Vite + Eslint + Prettier + Husky + Jest + 
 
-Currently, two official plugins are available:
+## Scripts
+npm run prepare is used to install Husky.  
+npm run prettier is used to format code with Prettier.
+npm run lint is used to analyze the code to look for problems and flag them.
+npm run test is used to run jest tests without flags.
+npm run coverage is used to run jest tests with coverage flag.
+npm run watch is used to run jest tests with watch flag.
+npm run dev is used to run vite in development mode.
+npm run build is used to run vite in build mode.
+npm run preview is used to run vite in preview mode.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+When you commit your changes, Husky automatically runs prettier and lint tests.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Tutorial
+To set up and running the project locally, you need to install all dependencies with npm install.
+Then you can run vite in development mode with npm run dev and start coding.
+Don't forget that we are branching from development branch, then when we are done, we make a pull request to development branch and add all the project members as reviewers. When everyone reviewed your changes, you can merge your request.
