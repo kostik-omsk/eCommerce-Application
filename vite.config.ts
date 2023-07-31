@@ -3,14 +3,14 @@ import react from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
-  if (command === 'build') {
+  if (command === "build") {
     return {
-      mode: 'production',
+      mode: "production",
       plugins: [react()],
     };
-  } else if (command === 'development'){
+  } else if (command === "development") {
     return {
-      mode: 'dev',
+      mode: "dev",
       plugins: [react()],
     };
   }
