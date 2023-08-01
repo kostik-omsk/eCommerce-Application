@@ -20,7 +20,7 @@ npm run coverage is used to run jest tests with coverage flag.
 npm run watch is used to run jest tests with watch flag.  
 npm run dev is used to run vite in development mode.  
 npm run build is used to run vite in build mode.  
-npm run preview is used to run vite in preview mode.  
+npm run preview is used to run vite in preview mode.
 
 When you commit your changes, Husky automatically runs prettier and lint tests.
 
