@@ -8,7 +8,7 @@ export default defineConfig(({ command }) => {
       mode: "production",
       plugins: [react()],
     };
-  } else if (command === "development") {
+  } else {
     return {
       mode: "dev",
       plugins: [react()],
