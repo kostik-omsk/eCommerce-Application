@@ -31,7 +31,7 @@
   "scripts": {
     "prepare": "husky install",
     "prettier": "prettier . --write",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "jest",
     "dev": "vite",
     "build": "tsc && vite build",
