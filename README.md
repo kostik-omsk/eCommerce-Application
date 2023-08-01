@@ -27,5 +27,6 @@ When you commit your changes, Husky automatically runs prettier and lint tests.
 ## Tutorial
 
 To set up and running the project locally, you need to install all dependencies with npm install.  
+After then you need to run npm run prepare one time for Husky automatically to run scripts before you commit.
 Then you can run vite in development mode with npm run dev and start coding.  
 Don't forget that we are branching from development branch, then when we are done, we make a pull request to development branch and add all the project members as reviewers. When everyone reviewed your changes, you can merge your request.
