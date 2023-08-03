@@ -8,7 +8,7 @@ The purpose of an ecommerce application is to facilitate online commercial trans
 
 ## The technology stack
 
-The technology stack used in this project is React + TypeScript + Vite + Eslint + Prettier + Husky + Jest
+The technology stack used in this project is React + TypeScript + Vite + Eslint + Prettier + Husky + Jest + ECommerceTools
 
 ## Scripts
 
