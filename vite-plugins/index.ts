@@ -1,0 +1,1 @@
+export { createRedirectsFilePlugin } from './createRedirectsFilePlugin';

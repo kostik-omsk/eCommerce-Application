@@ -1,0 +1,13 @@
+.logo {
+  will-change: filter;
+  transition: filter 300ms;
+  display: block;
+  width: 200px;
+  min-width: 180px;
+}
+.logo-img {
+  width: 100%;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--primary-color));
+}

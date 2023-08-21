@@ -1,0 +1,22 @@
+.check-address * {
+  color: #858585;
+}
+.select-country {
+  width: 250px;
+}
+
+@media only screen and (max-width: 768px) {
+  .select-country {
+    width: 200px;
+  }
+}
+@media only screen and (max-width: 590px) {
+  .select-country {
+    width: 180px;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .select-country {
+    width: 310px;
+  }
+}

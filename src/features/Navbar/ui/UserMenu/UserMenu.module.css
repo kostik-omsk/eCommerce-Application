@@ -1,0 +1,35 @@
+.user-block {
+  display: flex;
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+.user-login > *:not(:last-child) {
+  margin-right: var(--spacing-md);
+}
+
+.user-login-link {
+  color: var(--text-color);
+  transition: color 0.5s;
+}
+.user-login-link:hover {
+  color: var(--primary-color);
+}
+
+.user-drop:hover {
+  cursor: pointer;
+}
+.user-drop-open > div {
+  background-color: #ff6a00;
+}
+
+.cart-link {
+  margin-top: 15px;
+  color: var(--secondary-color);
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.cart-link:hover {
+  color: var(--primary-color);
+}

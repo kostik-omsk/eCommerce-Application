@@ -1,0 +1,38 @@
+.nav-list {
+  display: flex;
+  list-style: none;
+  position: relative;
+}
+.nav-item {
+  margin-right: 20px;
+}
+
+.nav-item:last-child {
+  margin-right: 0;
+}
+
+.navlink {
+  color: var(--secondary-color);
+  will-change: filter;
+  transition: all 400ms;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.nav-item .navlink:hover {
+  color: var(--text-color);
+  filter: drop-shadow(0 0 1em var(--primary-color));
+}
+
+@media only screen and (max-width: 769px) {
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    font-size: 24px;
+  }
+  .navlink {
+    font-size: 24px;
+  }
+}
