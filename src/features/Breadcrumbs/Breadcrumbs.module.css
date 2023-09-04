@@ -1,0 +1,10 @@
+.disabled {
+  color: rgb(153, 153, 153);
+  user-select: none;
+}
+
+@media only screen and (max-width: 576px) {
+  .breadcrumb {
+    font-size: 10px;
+  }
+}

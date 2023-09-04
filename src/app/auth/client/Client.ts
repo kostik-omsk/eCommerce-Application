@@ -8,22 +8,31 @@ const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 export class ApiClient {
   private static instance: ApiClient;
 
-  private readonly authOptions: AuthOptions = new AuthOptions();
+  private readonly authOptions: AuthOptions;
 
-  private readonly defaultClient: Client = new ClientBuilder()
-    .withProjectKey(projectKey)
-    .withClientCredentialsFlow(this.authOptions.getClientCredentialOptions())
-    .withHttpMiddleware(this.authOptions.getHttpOptions())
-    .build();
+  private readonly defaultClient: Client;
 
-  private currentClient: Client = this.defaultClient;
+  private currentClient: Client;
 
-  constructor() {
-    if (ApiClient.instance) {
-      return ApiClient.instance;
+  private constructor() {
+    this.authOptions = new AuthOptions();
+
+    this.defaultClient = new ClientBuilder()
+
+      .withProjectKey(projectKey)
+      .withClientCredentialsFlow(this.authOptions.getClientCredentialOptions())
+      .withHttpMiddleware(this.authOptions.getHttpOptions())
+      .build();
+
+    this.currentClient = this.defaultClient;
+  }
+
+  public static getInstance() {
+    if (!ApiClient.instance) {
+      ApiClient.instance = new ApiClient();
     }
 
-    ApiClient.instance = this;
+    return ApiClient.instance;
   }
 
   public get requestBuilder() {
@@ -35,7 +44,7 @@ export class ApiClient {
 
     if (token) {
       try {
-        this.switchToAccessTokenClient(window.atob(token));
+        this.switchToAccessTokenClient(token);
 
         const signInResult = await this.requestBuilder.me().get().execute();
 

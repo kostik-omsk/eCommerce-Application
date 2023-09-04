@@ -1,6 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { Layout } from '@widgets/layout';
-import { Main, SignUp, Cart, Catalog, SignIn, NotFound, About, Profile } from '@pages';
+import { Main, SignUp, Cart, Catalog, SignIn, NotFound, About, Profile, ProductDetail } from '@pages';
 
 const routes: RouteObject[] = [
   {
@@ -23,6 +23,16 @@ const routes: RouteObject[] = [
       {
         path: '/catalog',
         element: <Catalog />,
+        caseSensitive: true,
+      },
+      {
+        path: '/catalog/:id',
+        element: <Catalog />,
+        caseSensitive: true,
+      },
+      {
+        path: '/product/:productId', // Добавляем маршрут для детальной страницы продукта
+        element: <ProductDetail />,
         caseSensitive: true,
       },
       {

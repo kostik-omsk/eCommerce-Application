@@ -20,7 +20,7 @@ export class AuthOptions {
 
     const json = await response.clone().json();
 
-    if (json.access_token) localStorage.setItem('auth', window.btoa(json.access_token));
+    if (json.access_token) localStorage.setItem('auth', json.access_token);
 
     return response;
   };

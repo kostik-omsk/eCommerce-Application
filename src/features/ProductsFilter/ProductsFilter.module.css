@@ -1,0 +1,39 @@
+.product-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--spacing-md);
+}
+
+@media only screen and (max-width: 430px) {
+  .product-filter {
+    min-width: 350px;
+  }
+}
+
+.select-sort {
+  min-width: 205px;
+}
+
+@media only screen and (min-width: 767px) {
+  .select-sort {
+    min-width: 180px;
+  }
+}
+
+.controll {
+  display: flex;
+  align-items: center;
+  column-gap: var(--spacing-md);
+}
+
+.filter-section {
+  margin-top: var(--spacing-md);
+}
+.checkbox-group-list {
+  flex-wrap: nowrap;
+  max-height: 155px;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

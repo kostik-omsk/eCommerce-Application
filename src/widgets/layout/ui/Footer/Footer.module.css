@@ -1,3 +1,4 @@
 .footer {
   background: var(--myprimary);
+  padding: var(--spacing-md) 0;
 }

@@ -6,3 +6,4 @@ export { Cart } from './Сart';
 export { About } from './About';
 export { Profile } from './Profile';
 export { SignIn } from './SignIn';
+export { ProductDetail } from './ProductDetail';

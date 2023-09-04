@@ -17,13 +17,11 @@ const createRedirectsFile = async () => {
     await writeFile(resolve(dirName, `../${buildPath}/${data.filename}`), data.content, 'utf-8');
     console.log('\x1b[1;32mSuccessfully created _redirects file for deployment\x1b[0m');
   } catch (error: unknown) {
-
     console.log(
       `\x1b[1;31mAn error occurred while creating the _redirects file${
         error instanceof Error ? `:${error.message}` : ''
       }\x1b[0m`
     );
-
   }
 };
 

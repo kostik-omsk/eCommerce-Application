@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { UserAvatar } from './UserAvatar.tsx';
 import '@testing-library/jest-dom/extend-expect';
 
-
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -33,5 +32,4 @@ test('renders UserAvatar component with correct size', () => {
   render(<UserAvatar username={shortUsername} isopen={isOpen} />);
   const shortAvatarElement = screen.getByText(shortUsername);
   expect(shortAvatarElement).toHaveClass('ant-avatar-string');
-
 });

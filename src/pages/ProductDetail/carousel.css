@@ -1,0 +1,127 @@
+.slick-track {
+  display: flex !important;
+  /* Может сделать привязку к низу блока */
+  justify-content: center;
+  align-items: center;
+}
+
+.slick-dots li button {
+  background: rgba(0, 0, 0, 0.493) !important;
+}
+
+.slick-active button {
+  background: black !important;
+}
+
+.ant-carousel {
+  grid-area: ant-carousel;
+  min-width: calc(65vw / 2);
+}
+
+.product-container {
+  display: grid;
+  align-items: center !important;
+  margin: 15px 0;
+  padding: 0;
+  max-width: 100vw !important;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto auto;
+  gap: 0 10px;
+  grid-template-areas:
+    'ant-carousel prodWrapper'
+    'slider-buttons prodWrapper';
+}
+
+.prodName {
+  grid-area: prodName;
+}
+
+.prodDesc {
+  grid-area: prodDesc;
+}
+
+.prodPrice {
+  grid-area: prodPrice;
+}
+
+.someButtons {
+    grid-area: someButtons;
+    align-self: center;
+    min-width: 70px !important;
+}
+
+.prodWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px 0;
+  justify-content: center;
+  grid-area: prodWrapper;
+}
+
+.slider-image:hover,
+.closeBigCarousel:hover {
+  cursor: pointer !important;
+}
+
+/* Чтобы кнопки не были поверх модального окна */
+.slick-dots {
+  z-index: 0 !important;
+}
+
+.slider-big .slick-list .slick-track div div div .slider-image {
+  max-height: 75vh !important;
+}
+
+.closeBigCarousel {
+  border-radius: 50% !important;
+  position: absolute !important;
+  right: 30px !important;
+  z-index: 99 !important;
+}
+
+.slider-buttons {
+  display: flex;
+  margin: 0 auto;
+  gap: 20px;
+  justify-content: center;
+  grid-area: slider-buttons;
+}
+
+.nextSlide,
+.prevSlide {
+  border-radius: 50% !important;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 75%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* .nextSlide:hover,
+.prevSlide:hover {
+    background-color: rgba(34, 167, 255, 0.993) !important;
+} */
+
+.prevSlide {
+  background-image: url(../../assets/arrows/arrow-left.png);
+}
+.nextSlide {
+  background-image: url(../../assets/arrows/arrow-right.png);
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.ReactModal__Overlay {
+  max-height: calc(100vh);
+}
+
+.ReactModal__Content {
+  overflow: hidden;
+}
+
+.slider-image-modal:hover {
+  cursor: initial !important;
+}

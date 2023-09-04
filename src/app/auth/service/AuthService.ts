@@ -10,7 +10,7 @@ export class AuthService {
   public user: Customer | null = null;
 
   constructor() {
-    this.client = new ApiClient();
+    this.client = ApiClient.getInstance();
   }
 
   public async init(): Promise<void> {
@@ -75,7 +75,7 @@ export class AuthService {
     const token = localStorage.getItem('auth');
 
     if (token) {
-      await this.client.revokeToken(window.atob(token));
+      await this.client.revokeToken(token);
       localStorage.removeItem('auth');
     }
 

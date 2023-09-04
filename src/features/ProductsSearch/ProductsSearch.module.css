@@ -1,0 +1,20 @@
+.products-search {
+  width: 315px;
+  margin-left: 269px;
+}
+
+@media only screen and (max-width: 1155px) {
+  .products-search {
+    margin-left: 0px;
+  }
+}
+@media only screen and (max-width: 865px) {
+  .products-search {
+    width: 223px;
+  }
+}
+@media only screen and (max-width: 765px) {
+  .products-search {
+    width: calc(100% - 139px);
+  }
+}

@@ -1,0 +1,131 @@
+.ant-descriptions-view .emptyPrev {
+    text-align: center;
+}
+
+.user-data-controls,
+.address-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 7.5px;
+    margin-bottom: 15px;
+}
+
+.personal-info-form label {
+    display: flex;
+    flex-direction: row;
+}
+
+.personal-info-form input {
+    color: black;
+}
+
+.personal-info-form label>div:last-child {
+    width: 200px;
+}
+
+.personal-info-form label>input:last-child {
+    width: 200px;
+}
+
+.personal-info-form div {
+    min-width: 13%;
+}
+
+.personal-info-form input {
+    background-color: rgba(255, 255, 255, 0.582);
+    border-radius: 5px;
+
+    padding: 3px;
+}
+
+.personal-info-form input[type="text"] {
+    text-indent: 7px;
+}
+
+.modal-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.modal-controls button {
+    min-width: 80px;
+    min-height: 25px;
+}
+
+.personal-info-date div {
+    margin: 0;
+    display: flex;
+    align-items: flex-start;
+}
+
+.dateOfBirth {
+    padding-top: 4px;
+}
+
+.personal-info-date .ant-form-item .ant-row .ant-form-item-control-input,
+.personal-info-date .ant-form-item .ant-row {
+    width: 100%;
+}
+
+.ant-picker {
+    border-color: black;
+}
+
+.address-info-form div {
+    min-width: 15%;
+}
+
+.ant-descriptions-item-label {
+    width: 130px !important;
+}
+
+.main-profile-block {
+    width: 45vw;
+    margin: 0 auto;
+}
+
+
+@media screen and (max-width: 1100px) {
+
+
+    .ant-form label div {
+        min-width: 150px !important;
+    }
+
+}
+
+
+@media screen and (max-width: 900px) {
+
+    .main-profile-block {
+        width: 75vw;
+        margin: 0 auto;
+    }
+
+}
+
+@media screen and (max-width: 700px) {
+
+    .main-profile-block {
+        width: 90vw;
+        margin: 0 auto;
+    }
+
+    
+    .ant-form label {
+        justify-content: space-between
+    }
+
+
+    .ant-form {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .ReactModal__Content {
+        inset: 0;
+    }
+
+}

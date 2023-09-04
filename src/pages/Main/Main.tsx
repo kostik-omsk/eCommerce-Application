@@ -68,7 +68,7 @@ export const Main = () => {
   }, [state, messageApi, navigate]);
 
   return (
-    <div style={{ color: '#000', width: '300px' }}>
+    <div style={{ color: '#000', width: '300px', margin: '0 auto' }}>
       <h2>Main page</h2>
       {contextHolder}
       <Menu onClick={onClick} selectedKeys={[current]} mode="vertical" items={items} />
