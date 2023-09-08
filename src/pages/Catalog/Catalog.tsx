@@ -2,16 +2,16 @@ import { useParams } from 'react-router-dom';
 import { useProductProjections } from '@shared/api/products';
 import { useCategories } from '@shared/api/categories';
 import { ProductList } from '@widgets/ProductList';
-import { Categories } from '@widgets/Categories';
+import { Categories } from '@features/Categories';
 import { ProductsFilter } from '@features/ProductsFilter';
 import { Breadcrumbs } from '@features/Breadcrumbs';
-import style from './Catalog.module.css';
+import styles from './Catalog.module.css';
 
 const Catalog = () => {
   const { id } = useParams();
 
   const {
-    state: { products, loading },
+    state: { products, loading, filter },
     dispatch,
   } = useProductProjections(id);
 
@@ -19,11 +19,11 @@ const Catalog = () => {
 
   return (
     <>
-      <div className={style.headerCatalog}>
-        <Categories loading={loading} id={id} tree={categoriesTree} />
-        <ProductsFilter dispatch={dispatch} id={id} />
+      <div className={styles.headerCatalog}>
+        <Categories id={id} tree={categoriesTree} loading={loading} />
+        <ProductsFilter id={id} filter={filter} dispatch={dispatch} />
       </div>
-      <Breadcrumbs id={id} tree={categoriesTree} dispatch={dispatch} />
+      <Breadcrumbs id={id} tree={categoriesTree} loading={loading} />
       <ProductList products={products} loading={loading} />
     </>
   );

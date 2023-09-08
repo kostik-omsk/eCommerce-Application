@@ -3,7 +3,7 @@
   background-color: var(--secondary-color);
 }
 
-.avatar-activ {
+.avatar-active {
   transition: all 0.5s;
   background-color: var(--primary-color);
 }

@@ -17,7 +17,7 @@ const ProductCard = ({ product }: { product: ProductCardMap }) => {
   return (
     <Link to={`/product/${id}`} className={style.productCard}>
       <div className={style.productImg}>
-        <img src={urlImg} alt={title} />
+        <img src={urlImg} alt={title} loading="lazy" />
       </div>
       <div className={style.productInfo}>
         <h4>{title}</h4>

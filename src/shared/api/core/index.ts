@@ -1,1 +1,2 @@
-export { useApiRequest } from './useApiRequest';
+export { useApiRequest } from './hooks';
+export { ApiClient } from './client';

@@ -1,6 +1,6 @@
 import type { QueryParam } from '@commercetools/sdk-client-v2';
 import type { Key } from 'rc-tree/lib/interface';
-import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import type { FilterFields } from '@features/ProductsFilter';
 
 type ProductProjectionsQueryArgs = {
   fuzzy?: boolean;
@@ -22,6 +22,7 @@ type ProductProjectionsQueryArgs = {
   localeProjection?: string | string[];
   storeProjection?: string;
   expand?: string | string[];
+  'text.en'?: string;
   [key: string]: QueryParam;
 };
 
@@ -29,19 +30,12 @@ const enum ProductProjectionsActionTypes {
   SET_SEARCH = 'SET_SEARCH',
   CLEAR_SEARCH = 'CLEAR_SEARCH',
   SET_CATEGORY = 'SET_CATEGORY',
-  CLEAR_CATEGORY = 'CLEAR_CATEGORY',
+  SET_DEFAULT_CATEGORY = 'SET_DEFAULT_CATEGORY',
   SET_SORT = 'SET_SORT',
   CLEAR_SORT = 'CLEAR_SORT',
   SET_FILTER = 'SET_FILTER',
   CLEAR_FILTER = 'CLEAR_FILTER',
   RESET = 'RESET',
-}
-
-interface ProductProjectionsFilterParameters {
-  price: number[];
-  color: CheckboxValueType[];
-  release: CheckboxValueType[];
-  discountedProducts: boolean;
 }
 
 type SetSearchAction = {
@@ -60,7 +54,7 @@ type SetCategoryAction = {
 };
 
 type ClearCategoryAction = {
-  type: ProductProjectionsActionTypes.CLEAR_CATEGORY;
+  type: ProductProjectionsActionTypes.SET_DEFAULT_CATEGORY;
   payload?: undefined;
 };
 
@@ -81,7 +75,7 @@ type ResetAction = {
 
 type SetFilterAction = {
   type: ProductProjectionsActionTypes.SET_FILTER;
-  payload: ProductProjectionsFilterParameters;
+  payload: FilterFields;
 };
 
 type ClearFilterAction = {
@@ -126,12 +120,19 @@ const productProjectionsQueryArgsReducer = (
       };
     }
     case ProductProjectionsActionTypes.SET_CATEGORY: {
+      delete state.fuzzy;
+      delete state['text.en'];
+
       return {
         ...state,
         'filter.query': `categories.id:subtree("${payload}")`,
       };
     }
-    case ProductProjectionsActionTypes.CLEAR_CATEGORY: {
+    case ProductProjectionsActionTypes.SET_DEFAULT_CATEGORY: {
+      if (state['text.en']) {
+        return state;
+      }
+
       delete state['filter.query'];
 
       return {
@@ -169,7 +170,7 @@ const productProjectionsQueryArgsReducer = (
       };
     }
     case ProductProjectionsActionTypes.SET_FILTER: {
-      const { color, discountedProducts, price, release } = payload;
+      const { color, discountedProducts, priceRange, releaseDate } = payload;
       const filter = [];
 
       delete state.filter;
@@ -182,12 +183,12 @@ const productProjectionsQueryArgsReducer = (
         filter.push('variants.scopedPriceDiscounted:true');
       }
 
-      if (price.length) {
-        filter.push(`variants.scopedPrice.value.centAmount:range (${price[0]} to ${price[1]})`);
+      if (priceRange.length) {
+        filter.push(`variants.scopedPrice.value.centAmount:range (${priceRange[0]} to ${priceRange[1]})`);
       }
 
-      if (release.length) {
-        filter.push(`variants.attributes.releaseDate:${release.map((value) => `"${value}"`).join(', ')}`);
+      if (releaseDate.length) {
+        filter.push(`variants.attributes.releaseDate:${releaseDate.map((value) => `"${value}"`).join(', ')}`);
       }
 
       return {

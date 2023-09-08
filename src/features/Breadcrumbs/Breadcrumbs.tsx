@@ -1,15 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeTwoTone } from '@ant-design/icons';
 import type { CategoryTreeNode } from '@shared/api/categories/';
-import { ProductProjectionsActionTypes, type ProductProjectionsQueryArgsActions } from '@shared/api/products';
 import styles from './Breadcrumbs.module.css';
-
-interface BreadcrumbsProps {
-  id: string | undefined;
-  tree: CategoryTreeNode[];
-  dispatch: React.Dispatch<ProductProjectionsQueryArgsActions>;
-}
 
 const getCategoryPath = (nodes: CategoryTreeNode[], key: string) => {
   let result = '';
@@ -43,23 +36,31 @@ const getBreadcrumbItems = (nodes: CategoryTreeNode[], ID: string) => {
     });
 };
 
-const Breadcrumbs = ({ id, tree, dispatch }: BreadcrumbsProps) => {
-  const items: { title: JSX.Element | string }[] = id ? getBreadcrumbItems(tree, id) : [];
+interface BreadcrumbsProps {
+  id: string | undefined;
+  tree: CategoryTreeNode[];
+  loading: boolean;
+}
+
+interface BreadcrumbItem {
+  title: JSX.Element | string;
+}
+
+const Breadcrumbs = ({ id, tree, loading }: BreadcrumbsProps) => {
+  const items: BreadcrumbItem[] = id ? getBreadcrumbItems(tree, id) : [];
 
   return (
     <>
       <Breadcrumb
-        className={styles.breadcrumb}
+        className={loading ? styles.disabled : styles.breadcrumb}
         items={[
           {
             title: items.length ? (
-              <Link to={'/catalog'} onClick={() => dispatch({ type: ProductProjectionsActionTypes.CLEAR_CATEGORY })}>
-                Catalog
-              </Link>
+              <Link to={'/catalog'}>Catalog</Link>
             ) : (
               <>
                 <Link to={'/'}>
-                  <HomeOutlined />
+                  <HomeTwoTone />
                 </Link>
                 <span className={styles.disabled}> / Catalog</span>
               </>

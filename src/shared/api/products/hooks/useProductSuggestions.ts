@@ -1,6 +1,5 @@
 import { useMemo, useReducer } from 'react';
-import { ApiClient } from '@app/auth/client';
-import { useApiRequest } from '@shared/api/core';
+import { useApiRequest, ApiClient } from '@shared/api/core/';
 import type { Suggestion } from '@commercetools/platform-sdk';
 import {
   type ProductSuggestionsQueryArgs,

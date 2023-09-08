@@ -1,1 +1,1 @@
-export { ProductsFilter } from './ProductsFilter.tsx';
+export { ProductsFilter, type FilterFields } from './ProductsFilter.tsx';

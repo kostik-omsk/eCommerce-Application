@@ -15,6 +15,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  color-scheme: light;
 }
 
 * {
@@ -23,13 +24,44 @@
   box-sizing: border-box;
 }
 
-html {
-  scrollbar-gutter: stable;
-}
-
 body {
   min-width: 320px;
   height: 100%;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7fc8ff #f0f0f0;
+}
+
+*::-webkit-scrollbar {
+  height: 7px;
+  width: 7px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #e5e5e5;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #e2ebee;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #7fc8ff;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #50b9ff;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #137dc5;
 }
 
 a {

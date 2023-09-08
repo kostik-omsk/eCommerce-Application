@@ -12,7 +12,7 @@ export const SignUp = () => {
         <Navigate to={'/'} replace={true} />
       ) : (
         <>
-          <div className={styles.sugnUpForm}>
+          <div className={styles.signUpForm}>
             <h2>Registration</h2>
 
             <SingUpForm />

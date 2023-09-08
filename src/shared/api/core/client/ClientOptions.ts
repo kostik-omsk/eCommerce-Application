@@ -14,7 +14,7 @@ const {
   VITE_CTP_PROJECT_KEY: projectKey,
 } = import.meta.env;
 
-export class AuthOptions {
+class ClientOptions {
   private responseHandler = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
     const response = await fetch(input, init);
 
@@ -59,3 +59,5 @@ export class AuthOptions {
     };
   }
 }
+
+export { ClientOptions };

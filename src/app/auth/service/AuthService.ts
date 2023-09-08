@@ -1,6 +1,6 @@
 import type { Customer, CustomerDraft } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
-import { ApiClient } from '@app/auth/client';
+import { ApiClient } from '@shared/api/core';
 
 export type AuthResponse = { success: true; data: Customer } | { success: false; message: string };
 

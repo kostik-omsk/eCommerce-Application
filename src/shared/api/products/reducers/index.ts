@@ -2,6 +2,7 @@ export {
   productProjectionsQueryArgsReducer,
   ProductProjectionsActionTypes,
   type ProductProjectionsQueryArgs,
+  type ProductProjectionsQueryArgsActions,
 } from './productProjectionsReducer';
 
 export {

@@ -6,7 +6,7 @@ import { RangePickerProps } from 'antd/es/date-picker';
 
 import dayjs from 'dayjs';
 import { useAuth } from '@shared/hooks';
-import { ApiClient } from '@app/auth/client';
+import { ApiClient } from '@shared/api/core';
 import { validateData, validatePassword } from '@features/Validation';
 import './Profile.css';
 import { MyCustomerChangePassword, MyCustomerUpdateAction, _BaseAddress } from '@commercetools/platform-sdk';
@@ -124,6 +124,15 @@ export const Profile = () => {
               successMessage('success', `Information successfully updated`);
               setUser(response.body);
               closeUserInfoModal();
+            })
+            .catch((error: unknown) => {
+              successMessage(
+                'error',
+                error instanceof Error
+                  ? error.message
+                  : 'There is already an existing customer with the provided email.'
+              );
+              setEmail(user.email);
             });
         }
       }
@@ -383,7 +392,7 @@ export const Profile = () => {
           <Modal isOpen={isPasswordInfoModalOpened} ariaHideApp={false} onRequestClose={closePasswordInfoModal}>
             <h2>Change your password</h2>
             <Form
-              name="login_form"
+              name="login"
               className="personal-info-form"
               initialValues={{ remember: true }}
               onFinish={changePasswordData}
@@ -434,7 +443,7 @@ export const Profile = () => {
               <label className="personal-info-date">
                 <div className="dateOfBirth">Date of Birth:</div>
                 <Form.Item name="dateOfBirth" required={true} rules={[{ validator: validateData }]}>
-                  <DatePicker disabledDate={disabledDate} style={{ width: '100%' }} />
+                  <DatePicker disabledDate={disabledDate} style={{ width: '100%' }} className="date-picker" />
                 </Form.Item>
               </label>
               <br />
@@ -575,7 +584,7 @@ export const Profile = () => {
           </Modal>
         </>
       ) : (
-        <Navigate to={'/'} replace={true} />
+        <Navigate to={'/signin'} replace={true} />
       )}
     </>
   );

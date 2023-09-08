@@ -7,7 +7,7 @@ import {
   ProductSuggestionsActionTypes,
   useProductSuggestions,
 } from '@shared/api/products';
-import style from './ProductsSearch.module.css';
+import styles from './ProductsSearch.module.css';
 
 interface ProductsSearchProps {
   dispatch: React.Dispatch<ProductProjectionsQueryArgsActions>;
@@ -66,9 +66,9 @@ export const ProductsSearch = ({ dispatch, clearFilters, id }: ProductsSearchPro
       onSelect={(text) => handleSelect(text)}
       options={suggestions}
       placeholder="Search in store..."
-      className={style.productsSearch}
+      className={styles.productsSearch}
     >
-      <Input.Search onSearch={(text) => handleSearch(text)} />
+      <Input.Search allowClear onSearch={(text) => handleSearch(text)} />
     </AutoComplete>
   );
 };

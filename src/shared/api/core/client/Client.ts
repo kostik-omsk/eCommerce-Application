@@ -1,27 +1,27 @@
 import { ClientBuilder, type Client } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient, type Customer } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
-import { AuthOptions } from './AuthOptions';
+import { ClientOptions } from './ClientOptions';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export class ApiClient {
+class ApiClient {
   private static instance: ApiClient;
 
-  private readonly authOptions: AuthOptions;
+  private readonly options: ClientOptions;
 
   private readonly defaultClient: Client;
 
   private currentClient: Client;
 
   private constructor() {
-    this.authOptions = new AuthOptions();
+    this.options = new ClientOptions();
 
     this.defaultClient = new ClientBuilder()
 
       .withProjectKey(projectKey)
-      .withClientCredentialsFlow(this.authOptions.getClientCredentialOptions())
-      .withHttpMiddleware(this.authOptions.getHttpOptions())
+      .withClientCredentialsFlow(this.options.getClientCredentialOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
       .build();
 
     this.currentClient = this.defaultClient;
@@ -84,15 +84,15 @@ export class ApiClient {
     this.currentClient = new ClientBuilder()
       .withProjectKey(projectKey)
       .withExistingTokenFlow(`Bearer ${token}`, { force: true })
-      .withHttpMiddleware(this.authOptions.getHttpOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
       .build();
   }
 
   public switchToPasswordClient(user: UserAuthOptions): void {
     this.currentClient = new ClientBuilder()
       .withProjectKey(projectKey)
-      .withPasswordFlow(this.authOptions.getPasswordOptions(user))
-      .withHttpMiddleware(this.authOptions.getHttpOptions())
+      .withPasswordFlow(this.options.getPasswordOptions(user))
+      .withHttpMiddleware(this.options.getHttpOptions())
       .build();
   }
 
@@ -100,3 +100,5 @@ export class ApiClient {
     this.currentClient = this.defaultClient;
   }
 }
+
+export { ApiClient };

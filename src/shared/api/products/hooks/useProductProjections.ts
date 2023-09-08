@@ -1,13 +1,13 @@
-import { useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { ProductProjection } from '@commercetools/platform-sdk';
-import { ApiClient } from '@app/auth/client';
-import { useApiRequest } from '@shared/api/core';
+import { useApiRequest, ApiClient } from '@shared/api/core/';
 import {
   type ProductProjectionsQueryArgs,
   productProjectionsQueryArgsReducer,
   ProductProjectionsActionTypes,
 } from '@shared/api/products/reducers';
+import type { FilterFields } from '@features/ProductsFilter/';
 
 const mapResults = (results: ProductProjection[] | null) => {
   return results
@@ -38,6 +38,51 @@ const mapResults = (results: ProductProjection[] | null) => {
     : [];
 };
 
+const mapFilter = (filter: string[]) => {
+  const result: FilterFields = {
+    priceRange: [0, 999900],
+    color: [],
+    releaseDate: [],
+    discountedProducts: false,
+  };
+
+  const price = filter.find((item) => item.includes('cent'));
+  const date = filter.find((item) => item.toLocaleLowerCase().includes('date'));
+  const color = filter.find((item) => item.toLocaleLowerCase().includes('color'));
+  const discount = filter.find((item) => item.toLocaleLowerCase().includes('discount'));
+
+  if (price) {
+    const values = price
+      .split(':')[1]
+      .replace(/[range]|[(|)]|/gi, '')
+      .trim()
+      .split(' to ')
+      .map(Number);
+
+    result.priceRange = values;
+  }
+
+  if (date) {
+    const values = date.split(':')[1].replace(/["|,]/gi, '').split(' ');
+
+    result.releaseDate = values;
+  }
+
+  if (color) {
+    const values = color.split(':')[1].replace(/["|,]/gi, '').split(' ');
+
+    result.color = values;
+  }
+
+  if (discount) {
+    const value = discount.split(':')[1] === 'true';
+
+    result.discountedProducts = value;
+  }
+
+  return result;
+};
+
 const productProjectionsQueryArgsInitialValue: ProductProjectionsQueryArgs = {
   limit: 20,
   priceCurrency: import.meta.env.VITE_CTP_DEFAULT_CURRENCY,
@@ -45,53 +90,49 @@ const productProjectionsQueryArgsInitialValue: ProductProjectionsQueryArgs = {
 
 const useProductProjections = (id: string | undefined) => {
   const [queryArgs, dispatch] = useReducer(productProjectionsQueryArgsReducer, productProjectionsQueryArgsInitialValue);
+  const prevCategoryIdRef = useRef<typeof id>();
+  const navigate = useNavigate();
+
   const isCategoryExistsRequest = useMemo(
     () => (id ? ApiClient.getInstance().requestBuilder.categories().withId({ ID: id }).get() : null),
     [id]
   );
   const { data, error } = useApiRequest(isCategoryExistsRequest);
 
-  const navigate = useNavigate();
-
-  const request = useMemo(() => {
-    if (id && !data && error) {
-      navigate('/');
-
-      return null;
-    }
-
-    if (id && data && !error) {
-      delete queryArgs.fuzzy;
-      delete queryArgs['text.en'];
-
-      return ApiClient.getInstance()
-        .requestBuilder.productProjections()
-        .search()
-        .get({
-          queryArgs: {
-            ...queryArgs,
-            'filter.query': `categories.id:subtree("${id}")`,
-          },
-        });
-    }
-
-    if (!id) {
-      return ApiClient.getInstance().requestBuilder.productProjections().search().get({
-        queryArgs,
-      });
-    }
-
-    return null;
-    // eslint-disable-next-line
-  }, [data, error, queryArgs]);
+  const request = useMemo(
+    () =>
+      queryArgs === productProjectionsQueryArgsInitialValue
+        ? null
+        : ApiClient.getInstance().requestBuilder.productProjections().search().get({
+            queryArgs,
+          }),
+    [queryArgs]
+  );
 
   const state = useApiRequest(request);
+
+  useEffect(() => {
+    if (!id) {
+      return dispatch({ type: ProductProjectionsActionTypes.SET_DEFAULT_CATEGORY });
+    } else {
+      if (!data && error) {
+        return navigate('/');
+      }
+
+      if (id !== prevCategoryIdRef.current) {
+        prevCategoryIdRef.current = id;
+        return dispatch({ type: ProductProjectionsActionTypes.SET_CATEGORY, payload: id });
+      }
+    }
+    // eslint-disable-next-line
+  }, [id, data, error]);
 
   return {
     state: {
       products: mapResults(state.data?.results || null),
       error: state.error,
       loading: state.loading,
+      filter: queryArgs.filter && Array.isArray(queryArgs.filter) ? mapFilter(queryArgs.filter) : null,
     },
     dispatch,
   };

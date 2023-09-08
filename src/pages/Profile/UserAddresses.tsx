@@ -1,11 +1,11 @@
-import { Customer, MyCustomerUpdateAction, _BaseAddress } from '@commercetools/platform-sdk';
+import { useState } from 'react';
 import { DescriptionsProps, Descriptions, Button, message, Checkbox, Form, Select } from 'antd';
 import Modal from 'react-modal';
 import { getName } from 'country-list';
-import { useState } from 'react';
 import { postcodeValidator } from 'postcode-validator';
+import type { Customer, MyCustomerUpdateAction, _BaseAddress } from '@commercetools/platform-sdk';
 import { useAuth } from '@shared/hooks';
-import { ApiClient } from '@app/auth/client';
+import { ApiClient } from '@shared/api/core';
 
 export function ReturnAddresses(user: Customer): JSX.Element {
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });

@@ -162,7 +162,15 @@ export const SingUpForm = () => {
   return (
     <>
       {contextHolder}
-      <Form name="register" form={form} onFinish={onFinish} {...formItemLayout} size="small" style={{ maxWidth: 600 }}>
+      <Form
+        className={styles.form}
+        name="register"
+        form={form}
+        onFinish={onFinish}
+        {...formItemLayout}
+        size="small"
+        style={{ maxWidth: 600 }}
+      >
         {/* email */}
         <Form.Item
           name="email"

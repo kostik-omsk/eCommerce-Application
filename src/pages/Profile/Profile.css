@@ -1,131 +1,120 @@
 .ant-descriptions-view .emptyPrev {
-    text-align: center;
+  text-align: center !important;
 }
 
 .user-data-controls,
 .address-controls {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 7.5px;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 7.5px;
+  margin-bottom: 15px;
 }
 
 .personal-info-form label {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .personal-info-form input {
-    color: black;
+  color: black;
 }
 
-.personal-info-form label>div:last-child {
-    width: 200px;
+.personal-info-form label > div {
+  width: 200px;
 }
 
-.personal-info-form label>input:last-child {
-    width: 200px;
+.personal-info-form label > input:last-child {
+  width: 200px;
 }
 
-.personal-info-form div {
-    min-width: 13%;
+.personal-info-form > div {
+  min-width: 13%;
 }
 
 .personal-info-form input {
-    background-color: rgba(255, 255, 255, 0.582);
-    border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.582);
+  border-radius: 5px;
 
-    padding: 3px;
+  padding: 3px;
 }
 
-.personal-info-form input[type="text"] {
-    text-indent: 7px;
+.personal-info-form input[type='text'] {
+  text-indent: 7px;
 }
 
 .modal-controls {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .modal-controls button {
-    min-width: 80px;
-    min-height: 25px;
+  min-width: 80px !important;
+  min-height: 25px !important;
 }
 
 .personal-info-date div {
-    margin: 0;
-    display: flex;
-    align-items: flex-start;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
 }
 
 .dateOfBirth {
-    padding-top: 4px;
+  padding-top: 4px !important;
 }
 
 .personal-info-date .ant-form-item .ant-row .ant-form-item-control-input,
 .personal-info-date .ant-form-item .ant-row {
-    width: 100%;
+  width: 100% !important;
 }
-
-.ant-picker {
-    border-color: black;
+/* ant-picker -> conflict with signUp */
+.date-picker {
+  border-color: black;
 }
 
 .address-info-form div {
-    min-width: 15%;
+  min-width: 15% !important;
 }
 
 .ant-descriptions-item-label {
-    width: 130px !important;
+  width: 130px !important;
 }
 
 .main-profile-block {
-    width: 45vw;
-    margin: 0 auto;
+  width: 45vw !important;
+  margin: 0 auto !important;
 }
-
 
 @media screen and (max-width: 1100px) {
-
-
-    .ant-form label div {
-        min-width: 150px !important;
-    }
-
+  .ant-form label div {
+    min-width: 150px !important;
+  }
 }
 
-
 @media screen and (max-width: 900px) {
-
-    .main-profile-block {
-        width: 75vw;
-        margin: 0 auto;
-    }
-
+  .main-profile-block {
+    width: 75vw !important;
+    margin: 0 auto !important;
+  }
 }
 
 @media screen and (max-width: 700px) {
+  .main-profile-block {
+    width: 90vw !important;
+    margin: 0 auto !important;
+  }
 
-    .main-profile-block {
-        width: 90vw;
-        margin: 0 auto;
-    }
+  .ant-form label {
+    justify-content: space-between !important;
+  }
 
-    
-    .ant-form label {
-        justify-content: space-between
-    }
+  .ant-form {
+    display: flex !important;
+    flex-direction: column !important;
+  }
 
-
-    .ant-form {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    .ReactModal__Content {
-        inset: 0;
-    }
-
+  .ReactModal__Content {
+    inset: 0 !important;
+  }
 }
