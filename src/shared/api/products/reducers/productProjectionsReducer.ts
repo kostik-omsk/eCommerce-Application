@@ -11,8 +11,8 @@ type ProductProjectionsQueryArgs = {
   'filter.query'?: string | string[];
   facet?: string | string[];
   sort?: string | string[];
-  limit?: number;
-  offset?: number;
+  limit: number;
+  offset: number;
   withTotal?: boolean;
   staged?: boolean;
   priceCurrency?: string;
@@ -35,7 +35,7 @@ const enum ProductProjectionsActionTypes {
   CLEAR_SORT = 'CLEAR_SORT',
   SET_FILTER = 'SET_FILTER',
   CLEAR_FILTER = 'CLEAR_FILTER',
-  RESET = 'RESET',
+  SET_PAGE = 'SET_PAGE',
 }
 
 type SetSearchAction = {
@@ -68,11 +68,6 @@ type ClearSortAction = {
   payload?: undefined;
 };
 
-type ResetAction = {
-  type: ProductProjectionsActionTypes.RESET;
-  payload?: undefined;
-};
-
 type SetFilterAction = {
   type: ProductProjectionsActionTypes.SET_FILTER;
   payload: FilterFields;
@@ -81,6 +76,11 @@ type SetFilterAction = {
 type ClearFilterAction = {
   type: ProductProjectionsActionTypes.CLEAR_FILTER;
   payload?: undefined;
+};
+
+type SetPageAction = {
+  type: ProductProjectionsActionTypes.SET_PAGE;
+  payload: number;
 };
 
 type ProductProjectionsQueryArgsActions =
@@ -92,7 +92,7 @@ type ProductProjectionsQueryArgsActions =
   | ClearSortAction
   | SetFilterAction
   | ClearFilterAction
-  | ResetAction;
+  | SetPageAction;
 
 const productProjectionsQueryArgsReducer = (
   state: ProductProjectionsQueryArgs,
@@ -109,6 +109,7 @@ const productProjectionsQueryArgsReducer = (
         ...state,
         fuzzy: true,
         'text.en': payload,
+        offset: 0,
       };
     }
     case ProductProjectionsActionTypes.CLEAR_SEARCH: {
@@ -117,6 +118,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
       };
     }
     case ProductProjectionsActionTypes.SET_CATEGORY: {
@@ -125,6 +127,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
         'filter.query': `categories.id:subtree("${payload}")`,
       };
     }
@@ -137,6 +140,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
       };
     }
     case ProductProjectionsActionTypes.SET_SORT: {
@@ -160,6 +164,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
       };
     }
     case ProductProjectionsActionTypes.CLEAR_SORT: {
@@ -167,6 +172,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
       };
     }
     case ProductProjectionsActionTypes.SET_FILTER: {
@@ -193,6 +199,7 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
         filter: filter,
       };
     }
@@ -201,12 +208,13 @@ const productProjectionsQueryArgsReducer = (
 
       return {
         ...state,
+        offset: 0,
       };
     }
-    case ProductProjectionsActionTypes.RESET: {
+    case ProductProjectionsActionTypes.SET_PAGE: {
       return {
-        limit: 20,
-        priceCurrency: import.meta.env.VITE_CTP_DEFAULT_CURRENCY,
+        ...state,
+        offset: state.limit * payload - state.limit,
       };
     }
     default: {

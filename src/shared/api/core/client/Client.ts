@@ -18,7 +18,6 @@ class ApiClient {
     this.options = new ClientOptions();
 
     this.defaultClient = new ClientBuilder()
-
       .withProjectKey(projectKey)
       .withClientCredentialsFlow(this.options.getClientCredentialOptions())
       .withHttpMiddleware(this.options.getHttpOptions())

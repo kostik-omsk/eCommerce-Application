@@ -38,7 +38,7 @@ const mapResults = (results: ProductProjection[] | null) => {
     : [];
 };
 
-const mapFilter = (filter: string[]) => {
+const mapFilter = (filter: string[]): FilterFields => {
   const result: FilterFields = {
     priceRange: [0, 999900],
     color: [],
@@ -84,19 +84,25 @@ const mapFilter = (filter: string[]) => {
 };
 
 const productProjectionsQueryArgsInitialValue: ProductProjectionsQueryArgs = {
-  limit: 20,
   priceCurrency: import.meta.env.VITE_CTP_DEFAULT_CURRENCY,
+  limit: 20,
+  offset: 0,
 };
 
 const useProductProjections = (id: string | undefined) => {
   const [queryArgs, dispatch] = useReducer(productProjectionsQueryArgsReducer, productProjectionsQueryArgsInitialValue);
-  const prevCategoryIdRef = useRef<typeof id>();
+  const prevIdRef = useRef<typeof id>();
   const navigate = useNavigate();
 
+  // on first catalog/:id load
   const isCategoryExistsRequest = useMemo(
-    () => (id ? ApiClient.getInstance().requestBuilder.categories().withId({ ID: id }).get() : null),
-    [id]
+    () =>
+      id && queryArgs === productProjectionsQueryArgsInitialValue
+        ? ApiClient.getInstance().requestBuilder.categories().withId({ ID: id }).get()
+        : null,
+    [id, queryArgs]
   );
+
   const { data, error } = useApiRequest(isCategoryExistsRequest);
 
   const request = useMemo(
@@ -113,14 +119,16 @@ const useProductProjections = (id: string | undefined) => {
 
   useEffect(() => {
     if (!id) {
+      // catalog
       return dispatch({ type: ProductProjectionsActionTypes.SET_DEFAULT_CATEGORY });
     } else {
+      // broken id
       if (!data && error) {
         return navigate('/');
       }
-
-      if (id !== prevCategoryIdRef.current) {
-        prevCategoryIdRef.current = id;
+      // new id
+      if (id !== prevIdRef.current) {
+        prevIdRef.current = id;
         return dispatch({ type: ProductProjectionsActionTypes.SET_CATEGORY, payload: id });
       }
     }
@@ -133,6 +141,8 @@ const useProductProjections = (id: string | undefined) => {
       error: state.error,
       loading: state.loading,
       filter: queryArgs.filter && Array.isArray(queryArgs.filter) ? mapFilter(queryArgs.filter) : null,
+      count: state.data && state.data.total !== undefined ? state.data.total : null,
+      currentPage: queryArgs.offset / queryArgs.limit + 1,
     },
     dispatch,
   };

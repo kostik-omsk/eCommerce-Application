@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { useProductProjections } from '@shared/api/products';
+import { ProductProjectionsActionTypes, useProductProjections } from '@shared/api/products';
 import { useCategories } from '@shared/api/categories';
 import { ProductList } from '@widgets/ProductList';
+import { Pagination } from '@widgets/Pagination';
 import { Categories } from '@features/Categories';
 import { ProductsFilter } from '@features/ProductsFilter';
 import { Breadcrumbs } from '@features/Breadcrumbs';
@@ -11,7 +12,7 @@ const Catalog = () => {
   const { id } = useParams();
 
   const {
-    state: { products, loading, filter },
+    state: { products, loading, filter, count, currentPage },
     dispatch,
   } = useProductProjections(id);
 
@@ -24,7 +25,13 @@ const Catalog = () => {
         <ProductsFilter id={id} filter={filter} dispatch={dispatch} />
       </div>
       <Breadcrumbs id={id} tree={categoriesTree} loading={loading} />
-      <ProductList products={products} loading={loading} />
+      <Pagination
+        count={count}
+        loading={loading}
+        currentPage={currentPage}
+        onPageChange={(page: number) => dispatch({ type: ProductProjectionsActionTypes.SET_PAGE, payload: page })}
+      />
+      <ProductList loading={loading} products={products} />
     </>
   );
 };

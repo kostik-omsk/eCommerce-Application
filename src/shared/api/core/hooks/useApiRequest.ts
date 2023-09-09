@@ -16,11 +16,11 @@ const useApiRequest = <T>(request: ApiRequest<T> | null): RequestState<T> => {
 
   useEffect(() => {
     if (request) {
-      setState({
-        data: null,
+      setState((prev) => ({
+        ...prev,
         loading: true,
         error: null,
-      });
+      }));
 
       request
         .execute()

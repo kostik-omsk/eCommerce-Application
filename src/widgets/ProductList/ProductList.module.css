@@ -8,19 +8,22 @@
   row-gap: 32px;
   margin-top: var(--spacing-lg);
 }
+
 .products-list-spin-block {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.55);
   z-index: 10;
 }
+
 .spin {
   position: absolute;
   top: 200px;
 }
+
 .no-products-title {
   font-size: 48px;
   animation: 0.5s delayedTextColor linear 1;
@@ -54,6 +57,7 @@
     grid-row-gap: 24px;
     row-gap: 24px;
   }
+
   .no-products-title {
     font-size: 38px;
   }

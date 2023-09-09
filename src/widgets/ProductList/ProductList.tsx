@@ -7,11 +7,10 @@ interface ProductListProps {
   loading: boolean;
 }
 
-export const ProductList = ({ products, loading }: ProductListProps) => {
+const ProductList = ({ products, loading }: ProductListProps) => {
   return (
     <>
       {!products.length && !loading && <h2 className={styles.noProductsTitle}>No Products Found</h2>}
-
       <div className={styles.productsListContainer}>
         {loading && (
           <div className={styles.productsListSpinBlock}>
@@ -25,3 +24,5 @@ export const ProductList = ({ products, loading }: ProductListProps) => {
     </>
   );
 };
+
+export { ProductList };
