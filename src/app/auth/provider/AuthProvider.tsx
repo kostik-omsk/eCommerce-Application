@@ -28,8 +28,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signIn = async (credentials: UserAuthOptions): Promise<AuthResponse> => {
     const result: AuthResponse = await authService.signIn(credentials);
 
-    if (result.success) setCustomer(result.data);
-
+    if (result.success) {
+      setCustomer(result.data);
+      localStorage.removeItem('anon_id');
+      localStorage.removeItem('anon_refresh_token');
+    }
     return result;
   };
 

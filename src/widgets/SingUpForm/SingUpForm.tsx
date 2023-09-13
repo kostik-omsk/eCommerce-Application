@@ -5,6 +5,7 @@ import { Button, Checkbox, DatePicker, Form, Input, Select, Space, message } fro
 import { Rule } from 'antd/es/form';
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs, { Dayjs } from 'dayjs';
+import { useCart } from 'pages/Cart/useCart';
 import type { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { PlusOutlined } from '@ant-design/icons';
 import { useAuth } from '@shared/hooks';
@@ -77,6 +78,7 @@ export const SingUpForm = () => {
   const [shippingCountry, setShippingCountry] = useState('');
   const [billingCountry, setBillingCountry] = useState('');
   const navigate = useNavigate();
+  const { initCart } = useCart();
 
   const onFinish = async (values: FormValues) => {
     const { email, confirmPassword, firstName, lastName, dateOfBirth, address, address2 } = values;
@@ -138,6 +140,9 @@ export const SingUpForm = () => {
               hi: result.data.firstName,
             },
           });
+          localStorage.removeItem('anon_id');
+          localStorage.removeItem('anon_refresh_token');
+          initCart();
         }
       })
       .finally(() => {

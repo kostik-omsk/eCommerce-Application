@@ -4,6 +4,8 @@ import type { UserAuthOptions } from '@commercetools/sdk-client-v2/dist/declarat
 import { ClientOptions } from './ClientOptions';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
+const anonID = localStorage.getItem('anon_id');
+const token = localStorage.getItem('auth');
 
 class ApiClient {
   private static instance: ApiClient;
@@ -11,6 +13,10 @@ class ApiClient {
   private readonly options: ClientOptions;
 
   private readonly defaultClient: Client;
+
+  private readonly anonClient: Client;
+
+  private readonly refreshAnonClient: Client;
 
   private currentClient: Client;
 
@@ -23,14 +29,36 @@ class ApiClient {
       .withHttpMiddleware(this.options.getHttpOptions())
       .build();
 
-    this.currentClient = this.defaultClient;
+    this.anonClient = new ClientBuilder()
+
+      .withProjectKey(projectKey)
+      .withAnonymousSessionFlow(this.options.getAnonCredentialOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
+      .withLoggerMiddleware()
+      .build();
+
+    this.refreshAnonClient = new ClientBuilder()
+
+      .withProjectKey(projectKey)
+      .withRefreshTokenFlow(this.options.getRefreshCredentialOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
+      .withLoggerMiddleware()
+      .build();
+
+    this.currentClient =
+      !anonID && !token // Если нет ни анонимного айди ни токена, входим в анонимную сессию
+        ? this.anonClient
+        : anonID && token // Если есть анонимный айди и токен, то обновляем анонимный токен
+        ? this.refreshAnonClient
+        : !anonID && token // Если нету анонимного айди, но есть токен, то мы залогинены
+        ? this.defaultClient
+        : this.anonClient; // Если разлогинились и у нас только свежий анонимный айди, входим в анонимную сессию
   }
 
   public static getInstance() {
     if (!ApiClient.instance) {
       ApiClient.instance = new ApiClient();
     }
-
     return ApiClient.instance;
   }
 
@@ -39,36 +67,39 @@ class ApiClient {
   }
 
   public async init(): Promise<Customer | null> {
-    const token = localStorage.getItem('auth');
-
-    if (token) {
+    const tokenCheck = localStorage.getItem('auth');
+    const anonIDCheck = localStorage.getItem('anon_id');
+    if (tokenCheck && !anonIDCheck) {
       try {
-        this.switchToAccessTokenClient(token);
-
+        this.switchToAccessTokenClient();
         const signInResult = await this.requestBuilder.me().get().execute();
-
         return signInResult.body;
       } catch {
         this.switchToDefaultClient();
-
-        localStorage.removeItem('auth');
+      }
+    } else if (!tokenCheck && anonIDCheck) {
+      try {
+        await this.requestBuilder.get().execute();
+      } catch {
+        this.switchToDefaultClient();
       }
     }
 
     return null;
   }
 
-  public async revokeToken(token: string): Promise<void> {
+  public async revokeToken(): Promise<void> {
     const {
       VITE_CTP_AUTH_URL: authUrl,
       VITE_CTP_CLIENT_SECRET: clientSecret,
       VITE_CTP_CLIENT_ID: clientId,
     } = import.meta.env;
+    const tokenToRevoke = localStorage.getItem('auth');
 
     try {
       await fetch(`${authUrl}/oauth/token/revoke`, {
         method: 'POST',
-        body: `token=${token}&token_type_hint=access_token`,
+        body: `token=${tokenToRevoke}&token_type_hint=access_token`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Basic ${window.btoa(`${clientId}:${clientSecret}`)}`,
@@ -79,10 +110,11 @@ class ApiClient {
     }
   }
 
-  public switchToAccessTokenClient(token: string): void {
+  public switchToAccessTokenClient(): void {
+    const tokenFlow = localStorage.getItem('auth');
     this.currentClient = new ClientBuilder()
       .withProjectKey(projectKey)
-      .withExistingTokenFlow(`Bearer ${token}`, { force: true })
+      .withExistingTokenFlow(`Bearer ${tokenFlow}`, { force: true })
       .withHttpMiddleware(this.options.getHttpOptions())
       .build();
   }
@@ -97,6 +129,24 @@ class ApiClient {
 
   public switchToDefaultClient(): void {
     this.currentClient = this.defaultClient;
+  }
+
+  public async switchToAnonFlow(): Promise<void> {
+    this.currentClient = new ClientBuilder()
+      .withProjectKey(projectKey)
+      .withAnonymousSessionFlow(this.options.getAnonCredentialOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
+      .withLoggerMiddleware()
+      .build();
+  }
+
+  public async switchToRefreshFlow(): Promise<void> {
+    this.currentClient = new ClientBuilder()
+      .withProjectKey(projectKey)
+      .withRefreshTokenFlow(this.options.getRefreshCredentialOptions())
+      .withHttpMiddleware(this.options.getHttpOptions())
+      .withLoggerMiddleware()
+      .build();
   }
 }
 

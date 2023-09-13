@@ -8,6 +8,7 @@ import {
   ShoppingOutlined,
   UserAddOutlined,
   UserOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 
 const items: MenuProps['items'] = [
@@ -25,6 +26,11 @@ const items: MenuProps['items'] = [
     label: <Link to="/about">About</Link>,
     key: 'about',
     icon: <ReadOutlined />,
+  },
+  {
+    label: <Link to="/cart">Cart</Link>,
+    key: 'cart',
+    icon: <ShoppingCartOutlined />,
   },
   {
     label: <Link to="/signin">Sign In</Link>,
@@ -72,6 +78,13 @@ export const Main = () => {
       <h2>Main page</h2>
       {contextHolder}
       <Menu onClick={onClick} selectedKeys={[current]} mode="vertical" items={items} />
+      <div>
+        <ul className="discountDescriptionMain">
+          <li>PROMOCODES</li>
+          <li>5EUROFF - 5 EUR discount if a price of a single item is more than 5 EUR</li>
+          <li>25%OFF - 25% discount to all products in the cart</li>
+        </ul>
+      </div>
     </div>
   );
 };

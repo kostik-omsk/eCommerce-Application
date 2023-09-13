@@ -1,6 +1,7 @@
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+import { useCart } from 'pages/Cart/useCart';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import { useAuth } from '@shared/hooks';
 import { validateEmail, validatePassword } from '@features/Validation';
@@ -15,6 +16,7 @@ const SignInInputForm = () => {
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const { initCart } = useCart();
 
   const onFinish = async (values: FieldType) => {
     const email = values.email;
@@ -42,6 +44,7 @@ const SignInInputForm = () => {
             hi: result.data.firstName,
           },
         });
+        initCart();
       }
     });
   };
