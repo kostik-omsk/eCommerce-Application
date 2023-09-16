@@ -1,6 +1,7 @@
-import { ChangeEventHandler, KeyboardEventHandler, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, InputNumber, Input, Image, message, Tooltip, Popconfirm } from 'antd';
+import { debounce } from 'lodash';
 import { ApiClient } from '@shared/api/core';
 import { EuroCircleOutlined, PercentageOutlined, SafetyOutlined } from '@ant-design/icons';
 import { LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
@@ -229,15 +230,10 @@ export const Cart = () => {
     }
   }
 
-  let clickedNumber: string;
-  function inputNumberChanged(event: EventTarget & HTMLInputElement) {
-    const newNumber = event.value;
-    const goodsKey = event.id;
-    if (clickedNumber !== newNumber) {
-      updateItemInCart(newNumber, goodsKey);
-    }
+  const debouncedInputNumberChanged = debounce((newNumber, goodsKey) => {
+    updateItemInCart(newNumber, goodsKey);
     setCrementButtonsState(false);
-  }
+  }, 500);
 
   function buttonWasClicked(event: EventTarget) {
     const htmlElement = event as HTMLButtonElement | HTMLSpanElement;
@@ -256,17 +252,7 @@ export const Cart = () => {
     }
   }
 
-  const inputNumberEnterPressed: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    const newNumber = (event.target as HTMLInputElement).value;
-    const goodsKey = (event.target as HTMLInputElement).id;
-    if (clickedNumber !== newNumber) {
-      updateItemInCart(newNumber, goodsKey);
-    }
-    setCrementButtonsState(false);
-  };
-
-  function inputNumberFocused(event: EventTarget & HTMLInputElement) {
-    clickedNumber = event.value;
+  function inputNumberFocused() {
     setCrementButtonsState(true);
   }
 
@@ -430,9 +416,8 @@ export const Cart = () => {
                   max={999}
                   value={obj.quantity}
                   controls={false}
-                  onFocus={(event) => inputNumberFocused(event.target)}
-                  onBlur={(event) => inputNumberChanged(event.target)}
-                  onPressEnter={inputNumberEnterPressed}
+                  onFocus={inputNumberFocused}
+                  onInput={(event) => debouncedInputNumberChanged(event, obj.id)}
                 ></InputNumber>
                 <Button
                   className="items-button"
@@ -534,9 +519,8 @@ export const Cart = () => {
                 </Button>
               </Tooltip>
               <div className="discountDescription">
-                Чтобы не было 1000000 запросов, изменение количества продуктов происходит после потери фокуса или после
-                нажатия на Enter. Валера сказал, что это правильная реализация и что не надо обновлять цену после ввода
-                каждой цифры в инпуте.
+                Чтобы не было 1000000 запросов, изменение количества продуктов происходит через дебаунсер. Валера
+                сказал, что это правильная реализация и что не надо обновлять цену после ввода каждой цифры в инпуте.
               </div>
             </div>
           </div>
