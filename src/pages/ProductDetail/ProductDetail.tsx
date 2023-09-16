@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Carousel } from 'antd';
+import { message } from 'antd';
 import { CarouselRef } from 'antd/es/carousel';
 import { useCart } from 'pages/Cart/useCart';
 import { useParams, Navigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { EuroCircleOutlined } from '@ant-design/icons';
 import { useProduct } from '@shared/api/products';
 import { ApiClient } from '@shared/api/core';
 import './carousel.css';
+
 interface IDimentions {
   w: number;
   h: number;
@@ -25,7 +27,7 @@ interface IAttributesArr {
 }
 
 export const ProductDetail = () => {
-  const { cart, initCart } = useCart();
+  const { cart, initCart, getCurrentCart } = useCart();
   const { productId } = useParams<{ productId: string }>();
   const itemData = useProduct(productId);
   const [isBigPicModalOpened, bigPicModalIsOpen] = useState(false);
@@ -33,8 +35,24 @@ export const ProductDetail = () => {
   const carouselRefModal = useRef<CarouselRef>(null);
   const carouselRefSmall = useRef<CarouselRef>(null);
   const apiClient = ApiClient.getInstance();
+  const has = (prodId: string | undefined) => {
+    if (cart && prodId) {
+      return cart.lineItems.some((prod) => prod.productId === prodId);
+    }
+    return false;
+  };
+  const isProductInCart = has(productId);
 
   useEffect(() => {}, [carousel1Index]);
+
+  const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
+  function successMessage(result: 'success' | 'error', errorMessage: string): void {
+    messageApi.open({
+      type: result,
+      content: errorMessage,
+      duration: 2,
+    });
+  }
 
   const openPicModal = (slideNumber: number) => {
     setCarousel1Index(slideNumber);
@@ -75,17 +93,18 @@ export const ProductDetail = () => {
     setCarousel1Index(currentSlide);
   }
 
-  function addToCart() {
-    if (cart) {
-      apiClient.requestBuilder
+  async function addToCart() {
+    const renewedCart = (await getCurrentCart()).data ? (await getCurrentCart()).data : cart;
+    if (renewedCart) {
+      await apiClient.requestBuilder
         .me()
         .carts()
         .withId({
-          ID: cart.id,
+          ID: renewedCart.id,
         })
         .post({
           body: {
-            version: cart.version,
+            version: renewedCart.version,
             actions: [
               {
                 action: 'addLineItem',
@@ -100,6 +119,44 @@ export const ProductDetail = () => {
         })
         .catch((error) => {
           console.error(error);
+        });
+    }
+  }
+
+  async function removeProductFromCart() {
+    const renewedCart = (await getCurrentCart()).data ? (await getCurrentCart()).data : cart;
+    if (renewedCart) {
+      const product = renewedCart.lineItems.find((prod) => prod.productId === productId);
+      apiClient.requestBuilder
+        .me()
+        .carts()
+        .withId({
+          ID: renewedCart.id,
+        })
+        .post({
+          body: {
+            version: renewedCart.version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId: product?.id,
+                quantity: Number(0),
+              },
+              {
+                action: 'recalculate',
+                updateProductData: true,
+              },
+            ],
+          },
+        })
+        .execute()
+        .then(() => {
+          initCart();
+          successMessage('success', 'Product removed from the cart');
+        })
+        .catch((error) => {
+          console.error(error);
+          successMessage('error', 'Unable to delete the product');
         });
     }
   }
@@ -220,9 +277,16 @@ export const ProductDetail = () => {
                   Only for {prodPrice} <EuroCircleOutlined />
                 </div>
               ) : null}
-              <Button type="primary" className="someButtons" onClick={addToCart}>
-                Add to cart
-              </Button>
+
+              {isProductInCart ? (
+                <Button type="primary" danger className="someButtons" onClick={removeProductFromCart}>
+                  Remove from cart
+                </Button>
+              ) : (
+                <Button type="primary" className="someButtons" onClick={addToCart}>
+                  Add to cart
+                </Button>
+              )}
             </div>
             <Carousel
               ref={carouselRefSmall}
@@ -242,6 +306,7 @@ export const ProductDetail = () => {
               ) : null
             ) : null}
             {modalWindow}
+            {contextHolder}
           </div>
         </>
       );

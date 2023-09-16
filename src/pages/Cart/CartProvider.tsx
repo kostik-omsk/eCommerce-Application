@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useState } from 'react';
 import type { Cart } from '@commercetools/platform-sdk';
-import { CartService } from './CartService';
+import { CartResponse, CartService } from './CartService';
 
 const cartService = new CartService();
 await cartService.initCart();
@@ -11,6 +11,7 @@ interface CartProviderValue {
   deleteCart: () => Promise<void>;
   has: (id: string) => boolean;
   count: () => number;
+  getCurrentCart: () => Promise<CartResponse>;
 }
 
 const CartContext = createContext<CartProviderValue>({
@@ -19,6 +20,7 @@ const CartContext = createContext<CartProviderValue>({
   deleteCart: () => Promise.resolve(),
   has: () => false,
   count: () => 0,
+  getCurrentCart: () => Promise.resolve({ success: false, message: '' }),
 });
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -52,12 +54,21 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     return 0;
   };
 
+  const getCurrentCart = async () => {
+    const testCart = await cartService.getCurrentCart();
+    if (testCart.success) {
+      setCart(testCart.data);
+    }
+    return testCart;
+  };
+
   const value: CartProviderValue = {
     cart: cart,
     initCart,
     deleteCart,
     has,
     count,
+    getCurrentCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

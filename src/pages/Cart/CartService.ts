@@ -1,7 +1,11 @@
 import type { Cart } from '@commercetools/platform-sdk';
 import { ApiClient } from '@shared/api/core';
 
-export type CartResponse = { success: true; data: Cart } | { success: false; message: string };
+export interface CartResponse {
+  success?: true | false;
+  data?: Cart;
+  message?: string;
+}
 
 export class CartService {
   public cart: Cart | undefined;
@@ -47,5 +51,20 @@ export class CartService {
           },
         })
         .execute();
+  }
+
+  public async getCurrentCart(): Promise<CartResponse> {
+    try {
+      const updatedCart = (await this.initCart()) as Cart;
+      return {
+        success: true,
+        data: updatedCart,
+      };
+    } catch (error: unknown) {
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to update cart',
+      };
+    }
   }
 }

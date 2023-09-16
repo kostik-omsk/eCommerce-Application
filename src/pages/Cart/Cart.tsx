@@ -8,7 +8,7 @@ import { useCart } from './useCart';
 import './cart.css';
 
 export const Cart = () => {
-  const { cart, initCart } = useCart();
+  const { cart, initCart, getCurrentCart } = useCart();
   const [crementEnable, setCrementButtonsState] = useState(false);
 
   const apiClient = ApiClient.getInstance();
@@ -181,7 +181,7 @@ export const Cart = () => {
 
   // lineItems отвечает за количество предметов в корзине
   // key в body - Уникальный идентификатор корзины
-  function updateItemInCart(newCount: string, itemId: string, crements?: 'clicked') {
+  async function updateItemInCart(newCount: string, itemId: string, crements?: 'clicked') {
     const isNumber = +newCount;
     if (Number.isNaN(isNumber)) {
       successMessage('error', `Please provide correct input. Your input is not a number`);
@@ -190,16 +190,17 @@ export const Cart = () => {
         newCount = String(999);
         successMessage('error', `Mail us for wholesale purchases`);
       }
-      if (cart) {
+      const renewedCart = (await getCurrentCart()).data ? (await getCurrentCart()).data : cart;
+      if (renewedCart) {
         apiClient.requestBuilder
           .me()
           .carts()
           .withId({
-            ID: cart.id,
+            ID: renewedCart.id,
           })
           .post({
             body: {
-              version: cart.version,
+              version: renewedCart.version,
               actions: [
                 {
                   action: 'changeLineItemQuantity',
@@ -235,6 +236,7 @@ export const Cart = () => {
     if (clickedNumber !== newNumber) {
       updateItemInCart(newNumber, goodsKey);
     }
+    setCrementButtonsState(false);
   }
 
   function buttonWasClicked(event: EventTarget) {
@@ -260,10 +262,12 @@ export const Cart = () => {
     if (clickedNumber !== newNumber) {
       updateItemInCart(newNumber, goodsKey);
     }
+    setCrementButtonsState(false);
   };
 
   function inputNumberFocused(event: EventTarget & HTMLInputElement) {
     clickedNumber = event.value;
+    setCrementButtonsState(true);
   }
 
   function crementItem(event: React.MouseEvent<HTMLElement, MouseEvent>, type: string) {
@@ -362,22 +366,16 @@ export const Cart = () => {
                         <div>
                           Single item price: {itemPrice.toFixed(2)} <EuroCircleOutlined />
                         </div>
-                        <div>
-                          Single item price with discounts:{' '}
-                          {havePromocode || haveShopDiscount ? (
-                            <div>
-                              <span className="outlined">{itemPrice.toFixed(2)}</span>
-                              <span>
-                                {' '}
-                                {(itemPrice - shopDiscount - promocodeDiscount).toFixed(2)} <EuroCircleOutlined />
-                              </span>
-                            </div>
-                          ) : (
-                            <div>
-                              {itemPrice.toFixed(2)} <EuroCircleOutlined />
-                            </div>
-                          )}
-                        </div>
+                        {havePromocode || haveShopDiscount ? (
+                          <div>
+                            Single item price with discounts: <span className="outlined">{itemPrice.toFixed(2)}</span>
+                            <span>
+                              {' '}
+                              {(itemPrice - shopDiscount - promocodeDiscount).toFixed(2)} <EuroCircleOutlined />
+                            </span>
+                          </div>
+                        ) : null}
+
                         <div>
                           Total price without discounts: {(itemPrice * obj.quantity).toFixed(2)} <EuroCircleOutlined />
                         </div>
@@ -537,7 +535,8 @@ export const Cart = () => {
               </Tooltip>
               <div className="discountDescription">
                 Чтобы не было 1000000 запросов, изменение количества продуктов происходит после потери фокуса или после
-                нажатия на Enter
+                нажатия на Enter. Валера сказал, что это правильная реализация и что не надо обновлять цену после ввода
+                каждой цифры в инпуте.
               </div>
             </div>
           </div>

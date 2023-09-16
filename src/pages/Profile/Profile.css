@@ -118,3 +118,7 @@
     inset: 0 !important;
   }
 }
+
+.catalogAddToCartBtn {
+  width: 65%;
+}
