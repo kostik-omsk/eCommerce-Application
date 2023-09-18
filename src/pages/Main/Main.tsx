@@ -5,7 +5,7 @@ import { IntroMain } from './ui/IntroMain';
 import { CategoriesMain } from './ui/CategoriesMain';
 import { CarouselMain } from './ui/CarouselMain';
 
-export const Main = () => {
+const Main = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
@@ -33,3 +33,5 @@ export const Main = () => {
     </>
   );
 };
+
+export { Main };

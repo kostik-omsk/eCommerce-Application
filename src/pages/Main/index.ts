@@ -1,1 +1,1 @@
-export { Main } from './Main.tsx';
+export { Main as default } from './Main.tsx';

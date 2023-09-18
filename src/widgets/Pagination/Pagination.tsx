@@ -9,6 +9,8 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
+const pageSize = 20;
+
 const Pagination = ({ count, loading, currentPage, onPageChange }: PaginationProps) => {
   const [total, setTotal] = useState(count || 0);
   const totalRef = useRef<number>();
@@ -22,14 +24,15 @@ const Pagination = ({ count, loading, currentPage, onPageChange }: PaginationPro
 
   return (
     <>
-      <h3 className={styles.total}>Total {total} items</h3>
+      {total ? <h3 className={styles.total}>Total {total} items</h3> : null}
       <AntPagination
         total={total}
         current={currentPage}
         disabled={loading}
-        pageSize={20}
+        pageSize={pageSize}
         onChange={onPageChange}
         showSizeChanger={false}
+        showQuickJumper={total > pageSize * 7}
         hideOnSinglePage
       />
     </>

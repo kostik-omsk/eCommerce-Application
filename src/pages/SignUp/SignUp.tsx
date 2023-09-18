@@ -3,7 +3,7 @@ import { useAuth } from '@shared/hooks';
 import { SingUpForm } from '@widgets/SingUpForm';
 import styles from './SignUp.module.css';
 
-export const SignUp = () => {
+const SignUp = () => {
   const { user } = useAuth();
 
   return (
@@ -21,3 +21,5 @@ export const SignUp = () => {
     </>
   );
 };
+
+export { SignUp };

@@ -1,6 +1,9 @@
+import { lazy } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { Layout } from '@widgets/layout';
-import { Main, SignUp, Cart, Catalog, SignIn, NotFound, About, Profile, ProductDetail } from '@pages';
+
+//eslint-disable-next-line
+const Catalog = lazy(() => import('@pages/Catalog'));
 
 const routes: RouteObject[] = [
   {
@@ -8,54 +11,56 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <Main />,
+        Component: lazy(() => import('@pages/Main')),
       },
       {
         path: '/signin',
-        element: <SignIn />,
         caseSensitive: true,
+        Component: lazy(() => import('@pages/SignIn')),
       },
       {
         path: '/signup',
-        element: <SignUp />,
         caseSensitive: true,
+        Component: lazy(() => import('@pages/SignUp')),
       },
       {
         path: '/catalog',
-        element: <Catalog />,
+        Component: Catalog,
         caseSensitive: true,
       },
       {
         path: '/catalog/:id',
-        element: <Catalog />,
+        Component: Catalog,
         caseSensitive: true,
       },
       {
-        path: '/product/:productId', // Добавляем маршрут для детальной страницы продукта
-        element: <ProductDetail />,
+        path: '/product/:productId',
+        Component: lazy(() => import('@pages/ProductDetail')),
         caseSensitive: true,
       },
       {
         path: '/about',
-        element: <About />,
+        Component: lazy(() => import('@pages/About')),
         caseSensitive: true,
       },
       {
         path: '/cart',
-        element: <Cart />,
+        Component: lazy(() => import('@pages/Cart')),
         caseSensitive: true,
       },
       {
         path: '/profile',
-        element: <Profile />,
+        Component: lazy(() => import('@pages/Profile')),
         caseSensitive: true,
       },
       {
         path: '*',
-        element: <NotFound />,
+        Component: lazy(() => import('@pages/NotFound')),
       },
     ],
   },
 ];
 
-export const router = createBrowserRouter(routes, { basename: '/' });
+const router = createBrowserRouter(routes, { basename: '/' });
+
+export { router };

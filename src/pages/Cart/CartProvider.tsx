@@ -38,9 +38,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const has = (id: string) => {
     if (cart) {
-      const item = cart.lineItems.find((lineItem) => lineItem.productId === id);
-
-      return !!item;
+      return cart.lineItems.some((prod) => prod.productId === id);
     }
 
     return false;

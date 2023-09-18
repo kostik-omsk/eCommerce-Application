@@ -38,7 +38,7 @@
       "@assets/*": ["assets/*"],
       "@entities/*": ["entities/*"],
       "@features/*": ["features/*"],
-      "@pages": ["pages"],
+      "@pages/*": ["pages/*"],
       "@shared/*": ["shared/*"],
       "@widgets/*": ["widgets/*"],
       "@lib/*": ["lib/*"],

@@ -1,11 +1,11 @@
-import { EuroCircleOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import style from './ProductCard.module.css';
-import { Button } from 'antd';
-
-import { ApiClient } from '@shared/api/core';
-import { useCart } from 'pages/Cart/useCart';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+import { Skeleton, Button } from 'antd';
+import { EuroCircleOutlined } from '@ant-design/icons';
+import { ApiClient } from '@shared/api/core';
+import { useCart } from '@pages/Cart/useCart';
+import styles from './ProductCard.module.css';
 
 interface ProductCardMap {
   id: string;
@@ -15,19 +15,19 @@ interface ProductCardMap {
   discount: number | null;
   urlImg: string;
 }
-
 const ProductCard = ({ product }: { product: ProductCardMap }) => {
-  const { cart, initCart, getCurrentCart } = useCart();
+  const { cart, initCart, getCurrentCart, has } = useCart();
   const { id, title, description, urlImg, price, discount } = product;
+  const [loading, setImgLoading] = useState(true);
+
+  const { ref, inView } = useInView({
+    threshold: 0.3,
+    triggerOnce: true,
+  });
+
   const [cartLoading, cartLoadingState] = useState(false);
   const apiClient = ApiClient.getInstance();
 
-  const has = (prodId: string) => {
-    if (cart) {
-      return cart.lineItems.some((prod) => prod.productId === prodId);
-    }
-    return false;
-  };
   const isDisabled = has(id);
 
   const addProductCart = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -67,14 +67,26 @@ const ProductCard = ({ product }: { product: ProductCardMap }) => {
   };
 
   return (
-    <Link to={`/product/${id}`} className={style.productCard}>
-      <div className={style.productImg}>
-        <img src={urlImg} alt={title} loading="lazy" />
+    <Link to={`/product/${id}`} className={styles.productCard}>
+      <div ref={ref} className={styles.productImg}>
+        {inView ? (
+          <>
+            {loading && <Skeleton.Image active className={styles.skeleton} />}
+            <img
+              className={loading ? styles.hidden : styles.visible}
+              src={urlImg}
+              alt={title}
+              onLoad={() => setImgLoading(false)}
+            />
+          </>
+        ) : (
+          <Skeleton.Image className={styles.skeleton} />
+        )}
       </div>
-      <div className={style.productInfo}>
+      <div className={styles.productInfo}>
         <h4>{title}</h4>
-        {description && <p className={style.productDescription}>{description}</p>}
-        <div className={style.productPrice}>
+        {description && <p className={styles.productDescription}>{description}</p>}
+        <div className={styles.productPrice}>
           {discount ? (
             <>
               <small>

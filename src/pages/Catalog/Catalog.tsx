@@ -24,7 +24,7 @@ const Catalog = () => {
         <Categories id={id} tree={categoriesTree} loading={loading} />
         <ProductsFilter id={id} filter={filter} dispatch={dispatch} />
       </div>
-      <Breadcrumbs id={id} tree={categoriesTree} loading={loading} />
+      <Breadcrumbs id={id} tree={categoriesTree} loading={loading} includeLast={false} />
       <Pagination
         count={count}
         loading={loading}

@@ -1,1 +1,1 @@
-export { Cart } from './Cart.tsx';
+export { Cart as default } from './Cart.tsx';

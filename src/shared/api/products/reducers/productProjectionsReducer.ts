@@ -150,6 +150,7 @@ const productProjectionsQueryArgsReducer = (
         if (sortType === 'price') {
           return {
             ...state,
+            offset: 0,
             sort: `price ${order}`,
           };
         }
@@ -157,6 +158,7 @@ const productProjectionsQueryArgsReducer = (
         if (sortType === 'name') {
           return {
             ...state,
+            offset: 0,
             sort: `name.en ${order}`,
           };
         }

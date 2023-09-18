@@ -1,1 +1,1 @@
-export { Catalog } from './Catalog.tsx';
+export { Catalog as default } from './Catalog.tsx';

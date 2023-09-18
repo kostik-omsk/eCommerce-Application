@@ -34,7 +34,7 @@ class ApiClient {
       .withProjectKey(projectKey)
       .withAnonymousSessionFlow(this.options.getAnonCredentialOptions())
       .withHttpMiddleware(this.options.getHttpOptions())
-      .withLoggerMiddleware()
+
       .build();
 
     this.refreshAnonClient = new ClientBuilder()
@@ -42,7 +42,7 @@ class ApiClient {
       .withProjectKey(projectKey)
       .withRefreshTokenFlow(this.options.getRefreshCredentialOptions())
       .withHttpMiddleware(this.options.getHttpOptions())
-      .withLoggerMiddleware()
+
       .build();
 
     this.currentClient =
@@ -136,7 +136,6 @@ class ApiClient {
       .withProjectKey(projectKey)
       .withAnonymousSessionFlow(this.options.getAnonCredentialOptions())
       .withHttpMiddleware(this.options.getHttpOptions())
-      .withLoggerMiddleware()
       .build();
   }
 
@@ -145,7 +144,6 @@ class ApiClient {
       .withProjectKey(projectKey)
       .withRefreshTokenFlow(this.options.getRefreshCredentialOptions())
       .withHttpMiddleware(this.options.getHttpOptions())
-      .withLoggerMiddleware()
       .build();
   }
 }

@@ -8,6 +8,14 @@ const getCategoryPath = (nodes: CategoryTreeNode[], key: string) => {
   let result = '';
 
   for (const node of nodes) {
+    if (node.key === key && !node.children.length) {
+      const paths = node.path.split(' / ');
+      const target = paths.at(-1) + ':' + node.key;
+
+      result = paths.slice(0, -1).concat([target]).join(' / ');
+      return result;
+    }
+
     if (node.key === key) {
       result = node.path;
       return result;
@@ -24,14 +32,22 @@ const getCategoryPath = (nodes: CategoryTreeNode[], key: string) => {
   return result;
 };
 
-const getBreadcrumbItems = (nodes: CategoryTreeNode[], ID: string) => {
+const getBreadcrumbItems = (nodes: CategoryTreeNode[], ID: string, includeLast: boolean) => {
   return getCategoryPath(nodes, ID)
     .split(' / ')
     .map((item, index, arr) => {
       const [name, categoryId] = item.split(':');
 
+      const isLast = index === arr.length - 1;
+
+      if (includeLast && isLast) {
+        return {
+          title: <Link to={categoryId ? `/catalog/${categoryId}` : ''}>{name}</Link>,
+        };
+      }
+
       return {
-        title: index === arr.length - 1 ? name : <Link to={categoryId ? `/catalog/${categoryId}` : ''}>{name}</Link>,
+        title: isLast ? name : <Link to={categoryId ? `/catalog/${categoryId}` : ''}>{name}</Link>,
       };
     });
 };
@@ -40,14 +56,15 @@ interface BreadcrumbsProps {
   id: string | undefined;
   tree: CategoryTreeNode[];
   loading: boolean;
+  includeLast: boolean;
 }
 
 interface BreadcrumbItem {
   title: JSX.Element | string;
 }
 
-const Breadcrumbs = ({ id, tree, loading }: BreadcrumbsProps) => {
-  const items: BreadcrumbItem[] = id ? getBreadcrumbItems(tree, id) : [];
+const Breadcrumbs = ({ id, tree, loading, includeLast }: BreadcrumbsProps) => {
+  const items: BreadcrumbItem[] = id ? getBreadcrumbItems(tree, id, includeLast) : [];
 
   return (
     <>
@@ -59,10 +76,14 @@ const Breadcrumbs = ({ id, tree, loading }: BreadcrumbsProps) => {
               <Link to={'/catalog'}>Catalog</Link>
             ) : (
               <>
-                <Link to={'/'}>
-                  <HomeTwoTone />
-                </Link>
-                <span className={styles.disabled}> / Catalog</span>
+                {includeLast ? null : (
+                  <>
+                    <Link to={'/'}>
+                      <HomeTwoTone />
+                    </Link>
+                    <span className={styles.disabled}> / Catalog</span>
+                  </>
+                )}
               </>
             ),
           },

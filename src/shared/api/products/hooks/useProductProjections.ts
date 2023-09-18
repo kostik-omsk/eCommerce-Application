@@ -9,33 +9,31 @@ import {
 } from '@shared/api/products/reducers';
 import type { FilterFields } from '@features/ProductsFilter/';
 
-const mapResults = (results: ProductProjection[] | null) => {
-  return results
-    ? results.map((result) => {
-        const id = result.id;
-        const title = result.name.en;
-        const description = result.metaDescription?.en || null;
-        const price = result.masterVariant.price;
-        const discount = price?.discounted;
-        const urlImg = result.masterVariant.images ? result.masterVariant.images[0].url : '';
-        let displayedPrice = null;
-        let displayedDiscount = null;
-        if (price) {
-          displayedPrice = price.value.centAmount / Math.pow(10, price.value.fractionDigits);
-        }
-        if (price && discount) {
-          displayedDiscount = discount.value.centAmount / Math.pow(10, price.value.fractionDigits);
-        }
-        return {
-          id: id,
-          title: title,
-          description: description,
-          price: displayedPrice,
-          discount: displayedDiscount,
-          urlImg: urlImg,
-        };
-      })
-    : [];
+const mapResults = (results: ProductProjection[]) => {
+  return results.map((result) => {
+    const id = result.id;
+    const title = result.name.en;
+    const description = result.metaDescription?.en || null;
+    const price = result.masterVariant.price;
+    const discount = price?.discounted;
+    const urlImg = result.masterVariant.images ? result.masterVariant.images[0].url : '';
+    let displayedPrice = null;
+    let displayedDiscount = null;
+    if (price) {
+      displayedPrice = price.value.centAmount / Math.pow(10, price.value.fractionDigits);
+    }
+    if (price && discount) {
+      displayedDiscount = discount.value.centAmount / Math.pow(10, price.value.fractionDigits);
+    }
+    return {
+      id: id,
+      title: title,
+      description: description,
+      price: displayedPrice,
+      discount: displayedDiscount,
+      urlImg: urlImg,
+    };
+  });
 };
 
 const mapFilter = (filter: string[]): FilterFields => {
@@ -137,7 +135,7 @@ const useProductProjections = (id: string | undefined) => {
 
   return {
     state: {
-      products: mapResults(state.data?.results || null),
+      products: state.data?.results ? mapResults(state.data.results) : null,
       error: state.error,
       loading: state.loading,
       filter: queryArgs.filter && Array.isArray(queryArgs.filter) ? mapFilter(queryArgs.filter) : null,

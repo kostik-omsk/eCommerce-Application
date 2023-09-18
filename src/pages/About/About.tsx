@@ -27,7 +27,7 @@ const animateFrom = (elem: HTMLLIElement) => {
   );
 };
 
-export const About = () => {
+const About = () => {
   const teamRef = useRef<HTMLUListElement | null>(null);
 
   useLayoutEffect(() => {
@@ -101,3 +101,5 @@ export const About = () => {
     </>
   );
 };
+
+export { About };

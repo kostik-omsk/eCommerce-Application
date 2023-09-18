@@ -20,7 +20,7 @@ type FieldType = {
   passwordNew: string;
 };
 
-export const Profile = () => {
+const Profile = () => {
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
   const { user, signIn, setUser } = useAuth();
   const apiClient = ApiClient.getInstance();
@@ -589,3 +589,5 @@ export const Profile = () => {
     </>
   );
 };
+
+export { Profile };

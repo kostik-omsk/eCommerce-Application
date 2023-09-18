@@ -8,13 +8,12 @@ import { LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import { useCart } from './useCart';
 import './cart.css';
 
-export const Cart = () => {
+const Cart = () => {
   const { cart, initCart, getCurrentCart } = useCart();
   const [crementEnable, setCrementButtonsState] = useState(false);
 
   const apiClient = ApiClient.getInstance();
 
-  // console.log('cart', cart);
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
   function successMessage(result: 'success' | 'error', errorMessage: string): void {
     messageApi.open({
@@ -552,3 +551,5 @@ export const Cart = () => {
     </>
   );
 };
+
+export { Cart };
