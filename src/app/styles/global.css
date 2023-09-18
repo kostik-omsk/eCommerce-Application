@@ -85,3 +85,7 @@ h2 {
 .overflow-hidden {
   overflow: hidden;
 }
+
+.slick-dots li button {
+  background: var(--primary-color) !important;
+}

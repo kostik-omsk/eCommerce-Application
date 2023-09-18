@@ -230,7 +230,7 @@ export const Cart = () => {
     }
   }
 
-  const debouncedInputNumberChanged = debounce((newNumber, goodsKey) => {
+  const debouncedInputNumberChanged = debounce((newNumber: string, goodsKey: string) => {
     updateItemInCart(newNumber, goodsKey);
     setCrementButtonsState(false);
   }, 500);
@@ -292,7 +292,7 @@ export const Cart = () => {
         const obj = arrayOfGoods[i];
         const image = obj.variant.images ? obj.variant.images[0].url : '';
         const attr1 = obj.variant.attributes ? obj.variant.attributes[0].value : null;
-        const atrr2 = obj.variant.attributes ? obj.variant.attributes[1].value : null;
+        const atrr2 = obj.variant.attributes ? obj.variant.attributes[2].value : null;
         const moreThanOneItem = obj.quantity > 1;
         const haveShopDiscount = obj.price.discounted;
         const havePromocode = obj.discountedPricePerQuantity.length !== 0;

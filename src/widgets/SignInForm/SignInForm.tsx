@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Divider, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useCart } from 'pages/Cart/useCart';
@@ -50,47 +50,47 @@ const SignInInputForm = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.header}>Sign In</h2>
-      <Form
-        className={styles.form}
-        name="login_form"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
-        {contextHolder}
-        <Form.Item<FieldType>
-          className={styles.formItem}
-          labelCol={{ span: 4 }}
-          label="Email"
-          name="email"
-          rules={[
-            { required: true, message: 'Please input your Email!' },
-            {
-              validator: validateEmail,
-            },
-          ]}
+    <>
+      <div className={styles.container}>
+        <Form
+          className={styles.form}
+          name="login_form"
+          layout="vertical"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item<FieldType>
-          className={styles.formItem}
-          labelCol={{ span: 4 }}
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }, { validator: validatePassword }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Button className={styles.submit} type="primary" htmlType="submit">
-          Submit
-        </Button>
-        <div className={styles.signupRedirect}>
-          You don&apos;t have an account?<Link to="/signup">Sign Up</Link>
-        </div>
-      </Form>
-    </div>
+          {contextHolder}
+          <Form.Item<FieldType>
+            className={styles.formItem}
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: 'Please input your Email!' },
+              {
+                validator: validateEmail,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item<FieldType>
+            className={styles.formItem}
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }, { validator: validatePassword }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Button className={styles.submit} type="primary" htmlType="submit">
+            Submit
+          </Button>
+          <Divider />
+          <div className={styles.signupRedirect}>
+            You don&apos;t have an account?<Link to="/signup">Sign Up</Link>
+          </div>
+        </Form>
+      </div>
+    </>
   );
 };
 

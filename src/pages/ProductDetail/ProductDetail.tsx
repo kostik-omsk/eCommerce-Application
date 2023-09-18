@@ -194,8 +194,8 @@ export const ProductDetail = () => {
     if (masterData) {
       prodTitle = masterData.name.en;
       prodDescription = masterData.metaDescription ? masterData.metaDescription.en : null;
-      color = (masterData.masterVariant as IAttributesArr).attributes[0].value;
-      releaseDate = (masterData.masterVariant as IAttributesArr).attributes[1].value;
+      color = (masterData.masterVariant as IAttributesArr).attributes[5].value;
+      releaseDate = (masterData.masterVariant as IAttributesArr).attributes[4].value;
       // specialAttr = (masterData.masterVariant as IAttributesArr).attributes[2].value;
       // Цена в центах идёт, но на странице указываем в долларах
       prodPrice = masterData.masterVariant.prices ? masterData.masterVariant.prices[0].value.centAmount / 100 : null;

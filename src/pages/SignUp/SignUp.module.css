@@ -3,13 +3,13 @@
   border-radius: 8px;
   box-shadow: 1px 2px 8px #3232320d;
   background: rgb(255, 255, 255);
-}
-.title-form {
-  margin-bottom: 30px;
+  margin-left: 50px;
+  margin-bottom: var(--spacing-xl);
 }
 
 @media only screen and (max-width: 600px) {
   .sign-up-form {
     padding: 10px;
+    margin-left: 0;
   }
 }
