@@ -6,7 +6,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import type { ProductProjectionsQueryArgsActions } from '@shared/api/products';
 import { ProductsSearch } from '@features/ProductsSearch';
-import { colors, years, sort } from './data/options.json';
+import { colors, sort, gender } from './data/options.json';
 import styles from './ProductsFilter.module.css';
 
 interface FilterFields {
@@ -307,11 +307,11 @@ const ProductsFilter = ({ dispatch, id, filter }: ProductsFilterProps) => {
             />
           </div>
           <div className={styles.filterSection}>
-            <Title level={4}>Release Date</Title>
+            <Title level={4}>Gender</Title>
             <CheckboxGroup
               className={styles.checkboxGroupList}
               style={{ flexDirection: 'column' }}
-              options={years}
+              options={gender}
               value={filterState.releaseDate}
               onChange={onReleaseList}
             />

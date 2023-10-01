@@ -184,7 +184,7 @@ const productProjectionsQueryArgsReducer = (
       delete state.filter;
 
       if (color.length) {
-        filter.push(`variants.attributes.colorsList.key:${color.map((value) => `"${value}"`).join(', ')}`);
+        filter.push(`variants.attributes.color.key:${color.map((value) => `"${value}"`).join(', ')}`);
       }
 
       if (discountedProducts) {
@@ -196,7 +196,7 @@ const productProjectionsQueryArgsReducer = (
       }
 
       if (releaseDate.length) {
-        filter.push(`variants.attributes.releaseDate:${releaseDate.map((value) => `"${value}"`).join(', ')}`);
+        filter.push(`variants.attributes.gender.key:${releaseDate.map((value) => `"${value}"`).join(', ')}`);
       }
 
       return {
