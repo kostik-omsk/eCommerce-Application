@@ -32,8 +32,8 @@
 }
 .checkbox-group-list {
   flex-wrap: nowrap;
-  max-height: 155px;
+  /* max-height: 155px;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: auto; */
 }

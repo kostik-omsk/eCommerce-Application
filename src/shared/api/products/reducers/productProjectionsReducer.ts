@@ -178,7 +178,7 @@ const productProjectionsQueryArgsReducer = (
       };
     }
     case ProductProjectionsActionTypes.SET_FILTER: {
-      const { color, discountedProducts, priceRange, releaseDate } = payload;
+      const { color, discountedProducts, priceRange, releaseDate, size } = payload;
       const filter = [];
 
       delete state.filter;
@@ -197,6 +197,9 @@ const productProjectionsQueryArgsReducer = (
 
       if (releaseDate.length) {
         filter.push(`variants.attributes.gender.key:${releaseDate.map((value) => `"${value}"`).join(', ')}`);
+      }
+      if (size.length) {
+        filter.push(`variants.attributes.commonSize.key:${size.map((value) => `"${value}"`).join(', ')}`);
       }
 
       return {

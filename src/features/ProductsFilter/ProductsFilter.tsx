@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { Badge, Button, Checkbox, Drawer, InputNumber, Select, Slider } from 'antd';
+import { Badge, Button, Checkbox, Collapse, CollapseProps, Drawer, InputNumber, Select, Slider } from 'antd';
 import { ProductProjectionsActionTypes } from '@shared/api/products';
 import Title from 'antd/es/typography/Title';
 import { FilterOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import type { ProductProjectionsQueryArgsActions } from '@shared/api/products';
 import { ProductsSearch } from '@features/ProductsSearch';
-import { colors, sort, gender } from './data/options.json';
+import { colors, sort, gender, sizes } from './data/options.json';
 import styles from './ProductsFilter.module.css';
 
 interface FilterFields {
   color: string[] | CheckboxValueType[];
   releaseDate: string[] | CheckboxValueType[];
+  size: string[] | CheckboxValueType[];
   priceRange: number[] | [number, number];
   discountedProducts: boolean;
 }
@@ -29,17 +30,20 @@ const areFiltersEqual = (current: FilterFields, applied: FilterFields) => {
   const areReleaseDatesEqual =
     current.releaseDate.length === applied.releaseDate.length &&
     current.releaseDate.every((entry) => applied.releaseDate.includes(`${entry}`));
+  const areSizeEqual =
+    current.size?.length === applied.size?.length && current.size.every((entry) => applied.size.includes(`${entry}`));
 
   const arePriceRangesEqual = current.priceRange.toString() === applied.priceRange.toString();
 
   const areDiscountedProductsEqual = current.discountedProducts === applied.discountedProducts;
 
-  return areColorsEqual && areReleaseDatesEqual && arePriceRangesEqual && areDiscountedProductsEqual;
+  return areColorsEqual && areReleaseDatesEqual && arePriceRangesEqual && areDiscountedProductsEqual && areSizeEqual;
 };
 
 const initialValue: FilterFields = {
   color: [],
   releaseDate: [],
+  size: [],
   priceRange: [0, 9999],
   discountedProducts: false,
 };
@@ -57,6 +61,7 @@ const ProductsFilter = ({ dispatch, id, filter }: ProductsFilterProps) => {
   const disabled =
     !filterState.color.length &&
     !filterState.releaseDate.length &&
+    !filterState.size.length &&
     !filterState.discountedProducts &&
     filterState.priceRange.toString() === '0,9999';
 
@@ -142,18 +147,26 @@ const ProductsFilter = ({ dispatch, id, filter }: ProductsFilterProps) => {
     }));
   };
 
+  const onSizeList = (list: CheckboxValueType[]) => {
+    setFilterState((prev) => ({
+      ...prev,
+      size: list,
+    }));
+  };
+
   const countFilter = (reset?: boolean) => {
     if (reset) {
       setCountFilterOne(0);
       setCountFilterTwo(9999);
       return setCountFilters(0);
     }
-    const { color, discountedProducts, priceRange, releaseDate } = filterState;
+    const { color, discountedProducts, priceRange, releaseDate, size } = filterState;
 
     const colorCount = color.length;
     const dateCount = releaseDate.length;
+    const sizeCount = size.length;
 
-    let count = colorCount + dateCount;
+    let count = colorCount + dateCount + sizeCount;
 
     if (priceRange[0] !== 0 || priceRange[1] !== 9999) {
       count += 1;
@@ -245,6 +258,48 @@ const ProductsFilter = ({ dispatch, id, filter }: ProductsFilterProps) => {
     }));
   };
 
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: 'Gender',
+      children: (
+        <CheckboxGroup
+          className={styles.checkboxGroupList}
+          style={{ flexDirection: 'column' }}
+          options={gender}
+          value={filterState.releaseDate}
+          onChange={onReleaseList}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: 'Color',
+      children: (
+        <CheckboxGroup
+          className={styles.checkboxGroupList}
+          style={{ flexDirection: 'column' }}
+          options={colors}
+          value={filterState.color}
+          onChange={onColorList}
+        />
+      ),
+    },
+    {
+      key: '3',
+      label: 'Size',
+      children: (
+        <CheckboxGroup
+          className={styles.checkboxGroupList}
+          style={{ flexDirection: 'column' }}
+          options={sizes}
+          value={filterState.size}
+          onChange={onSizeList}
+        />
+      ),
+    },
+  ];
+
   return (
     <>
       <ProductsSearch dispatch={dispatch} clearFilters={reset} id={id} />
@@ -297,32 +352,15 @@ const ProductsFilter = ({ dispatch, id, filter }: ProductsFilterProps) => {
             />
           </div>
           <div className={styles.filterSection}>
-            <Title level={4}>Color</Title>
-            <CheckboxGroup
-              className={styles.checkboxGroupList}
-              style={{ flexDirection: 'column' }}
-              options={colors}
-              value={filterState.color}
-              onChange={onColorList}
-            />
+            <Collapse items={items} />
           </div>
-          <div className={styles.filterSection}>
-            <Title level={4}>Gender</Title>
-            <CheckboxGroup
-              className={styles.checkboxGroupList}
-              style={{ flexDirection: 'column' }}
-              options={gender}
-              value={filterState.releaseDate}
-              onChange={onReleaseList}
-            />
-          </div>
+
           <div className={styles.filterSection}>
             <Title level={4}>Discounted</Title>
             <Checkbox onChange={onDiscountedProducts} checked={filterState.discountedProducts}>
               Show discounted products.
             </Checkbox>
           </div>
-
           <div className={`${styles.controll} ${styles.filterSection}`}>
             <Button onClick={applyFilters} disabled={disabled}>
               Apply
