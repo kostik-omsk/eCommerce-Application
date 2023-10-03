@@ -1,6 +1,6 @@
 .slick-track {
   display: flex !important;
-  /* Может сделать привязку к низу блока */
+
   justify-content: center;
   align-items: center;
 }
@@ -19,17 +19,25 @@
 }
 
 .product-container {
-  display: grid;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
   align-items: center !important;
   margin: 15px 0;
   padding: 0;
-  max-width: 100vw !important;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto auto;
-  gap: 0 10px;
-  grid-template-areas:
-    'ant-carousel prodWrapper'
-    'slider-buttons prodWrapper';
+
+  gap: 10px;
+}
+
+@media only screen and (max-width: 576px) {
+  .product-container {
+    flex-direction: column-reverse;
+  }
+}
+
+.imgProduct {
+  width: 300px;
+  max-width: 350px;
 }
 
 .prodName {
@@ -56,78 +64,5 @@
   flex-direction: column;
   gap: 20px 0;
   justify-content: center;
-  grid-area: prodWrapper;
-}
-
-.slider-image:hover,
-.closeBigCarousel:hover {
-  cursor: pointer !important;
-}
-
-/* Чтобы кнопки не были поверх модального окна */
-.slick-dots {
-  z-index: 0 !important;
-}
-
-.slider-big .slick-list .slick-track div div div .slider-image {
-  max-height: 75vh !important;
-}
-
-.closeBigCarousel {
-  border-radius: 50% !important;
-  position: absolute !important;
-  right: 30px !important;
-  z-index: 99 !important;
-}
-
-.slider-buttons {
-  display: flex;
-  margin: 0 auto;
-  gap: 20px;
-  justify-content: center;
-  grid-area: slider-buttons;
-}
-
-.nextSlide,
-.prevSlide {
-  border-radius: 50% !important;
-  background-color: transparent;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 75%;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* .nextSlide:hover,
-.prevSlide:hover {
-    background-color: rgba(34, 167, 255, 0.993) !important;
-} */
-
-.prevSlide {
-  background-image: url(../../assets/arrows/arrow-left.png);
-}
-.nextSlide {
-  background-image: url(../../assets/arrows/arrow-right.png);
-}
-
-.strike {
-  text-decoration: line-through;
-}
-
-.ReactModal__Overlay {
-  max-height: calc(100vh);
-}
-
-.ReactModal__Content {
-  overflow: hidden;
-}
-
-.slider-image-modal:hover {
-  cursor: initial !important;
-}
-
-@media only screen and (max-width: 700px) {
-  .closeBigCarousel {
-    margin-right: 20px !important;
-  }
+  max-width: 500px;
 }

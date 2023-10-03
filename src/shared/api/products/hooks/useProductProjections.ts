@@ -40,6 +40,7 @@ const mapFilter = (filter: string[]): FilterFields => {
   const result: FilterFields = {
     priceRange: [0, 9999],
     color: [],
+    size: [],
     releaseDate: [],
     discountedProducts: false,
   };

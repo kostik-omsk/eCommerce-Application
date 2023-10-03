@@ -1,26 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Carousel } from 'antd';
+import { Button, Image } from 'antd';
 import { message } from 'antd';
-import { CarouselRef } from 'antd/es/carousel';
 import { useCart } from 'pages/Cart/useCart';
 import { useParams, Navigate } from 'react-router-dom';
-import Modal from 'react-modal';
 import { EuroCircleOutlined } from '@ant-design/icons';
 import { useProduct } from '@shared/api/products';
 import { ApiClient } from '@shared/api/core';
 import './carousel.css';
 
-interface IDimentions {
-  w: number;
-  h: number;
-}
-interface IImages {
-  url: string;
-  dimensions: IDimentions;
-}
 interface IAttributes {
   name: string;
-  value: string;
+  value: string | { key: string };
 }
 interface IAttributesArr {
   attributes: IAttributes[];
@@ -30,10 +19,7 @@ export const ProductDetail = () => {
   const { cart, initCart, getCurrentCart } = useCart();
   const { productId } = useParams<{ productId: string }>();
   const itemData = useProduct(productId);
-  const [isBigPicModalOpened, bigPicModalIsOpen] = useState(false);
-  const [carousel1Index, setCarousel1Index] = useState(0);
-  const carouselRefModal = useRef<CarouselRef>(null);
-  const carouselRefSmall = useRef<CarouselRef>(null);
+
   const apiClient = ApiClient.getInstance();
   const has = (prodId: string | undefined) => {
     if (cart && prodId) {
@@ -42,8 +28,6 @@ export const ProductDetail = () => {
     return false;
   };
   const isProductInCart = has(productId);
-
-  useEffect(() => {}, [carousel1Index]);
 
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
   function successMessage(result: 'success' | 'error', errorMessage: string): void {
@@ -54,44 +38,7 @@ export const ProductDetail = () => {
     });
   }
 
-  const openPicModal = (slideNumber: number) => {
-    setCarousel1Index(slideNumber);
-    bigPicModalIsOpen(true);
-  };
-  const closePicModal = () => {
-    if (carouselRefSmall.current) {
-      carouselRefSmall.current.goTo(carousel1Index, true);
-    }
-    if (carouselRefModal.current) {
-      carouselRefModal.current.goTo(carousel1Index, true);
-    }
-    bigPicModalIsOpen(false);
-  };
   const masterData = itemData.product ? itemData.product.masterData.current : null;
-
-  function openNextSlide() {
-    if (carouselRefSmall.current) {
-      carouselRefSmall.current.next();
-    }
-  }
-  function openNextSlideModal() {
-    if (carouselRefModal.current) {
-      carouselRefModal.current.next();
-    }
-  }
-  function openPrevSlide() {
-    if (carouselRefSmall.current) {
-      carouselRefSmall.current.prev();
-    }
-  }
-  function openPrevSlideModal() {
-    if (carouselRefModal.current) {
-      carouselRefModal.current.prev();
-    }
-  }
-  function sliderChangedPage(currentSlide: number) {
-    setCarousel1Index(currentSlide);
-  }
 
   async function addToCart() {
     const renewedCart = (await getCurrentCart()).data ? (await getCurrentCart()).data : cart;
@@ -162,41 +109,29 @@ export const ProductDetail = () => {
   }
 
   function addCarousel() {
-    const imageStyle: React.CSSProperties = {
-      margin: 0,
-      height: 'auto',
-      maxHeight: '500px',
-      width: '100%',
-      objectFit: 'contain',
-      marginBottom: '20px',
-    };
-    const bigSlider: React.CSSProperties = {
-      margin: 0,
-      height: 'auto',
-      maxHeight: '100%',
-      width: '100%',
-      objectFit: 'contain',
-      marginBottom: '20px',
-    };
-
-    const carouselSlides: JSX.Element[] = [];
-    const modalSlides: JSX.Element[] = [];
-
     let prodTitle: string,
       prodDescription: string | null,
       prodPrice: number | null,
-      prodUrlImg: IImages[],
+      prodUrlImg: string,
       prodDiscount: number | null,
       color: string,
-      releaseDate: string;
+      size: string;
     // specialAttr: string;
 
     if (masterData) {
       prodTitle = masterData.name.en;
       prodDescription = masterData.metaDescription ? masterData.metaDescription.en : null;
-      color = (masterData.masterVariant as IAttributesArr).attributes[5].value;
-      releaseDate = (masterData.masterVariant as IAttributesArr).attributes[4].value;
-      // specialAttr = (masterData.masterVariant as IAttributesArr).attributes[2].value;
+
+      const attributesArr = masterData.masterVariant as IAttributesArr;
+
+      // Обработка атрибута color
+      const colorAttribute = attributesArr.attributes[8].value;
+      color = typeof colorAttribute === 'string' ? colorAttribute : colorAttribute.key;
+
+      // Обработка атрибута size
+      const sizeAttribute = attributesArr.attributes[7].value;
+      size = typeof sizeAttribute === 'string' ? sizeAttribute : '';
+
       // Цена в центах идёт, но на странице указываем в долларах
       prodPrice = masterData.masterVariant.prices ? masterData.masterVariant.prices[0].value.centAmount / 100 : null;
       prodDiscount = masterData.masterVariant.price
@@ -204,60 +139,9 @@ export const ProductDetail = () => {
           ? masterData.masterVariant.price.discounted.value.centAmount / 100
           : null
         : null;
-      prodUrlImg = (masterData.masterVariant.images as IImages[]).filter((n) => n.url !== ''); // Потом подправить
-      for (let i = 0; i < prodUrlImg.length; i += 1) {
-        carouselSlides.push(
-          <div key={`slide${i}`}>
-            <img
-              style={imageStyle}
-              onClick={() => {
-                openPicModal(i);
-              }}
-              id="imageStyle"
-              className="slider-image imageStyle"
-              src={prodUrlImg[i].url}
-              alt="product logo"
-            />
-          </div>
-        );
-        modalSlides.push(
-          <div key={`slide${i}`}>
-            <img
-              style={imageStyle}
-              className="slider-image slider-image-modal"
-              src={prodUrlImg[i].url}
-              alt="product logo"
-            />
-          </div>
-        );
-      }
+      const imagesUrl = masterData.masterVariant.images;
 
-      const modalWindow = (
-        <Modal isOpen={isBigPicModalOpened} ariaHideApp={false} onRequestClose={closePicModal}>
-          <Button className="closeBigCarousel" onClick={closePicModal}>
-            X
-          </Button>
-          <Carousel
-            ref={carouselRefModal}
-            className="slider-big"
-            dotPosition={'bottom'}
-            waitForAnimate={true}
-            style={bigSlider}
-            initialSlide={carousel1Index}
-            afterChange={sliderChangedPage}
-          >
-            {modalSlides}
-          </Carousel>
-          {masterData.masterVariant.images ? (
-            masterData.masterVariant.images.filter((n) => n.url !== '').length > 1 ? (
-              <div className="slider-buttons">
-                <Button type="primary" className="prevSlide" onClick={openPrevSlideModal}></Button>
-                <Button type="primary" className="nextSlide" onClick={openNextSlideModal}></Button>
-              </div>
-            ) : null
-          ) : null}
-        </Modal>
-      );
+      prodUrlImg = imagesUrl ? imagesUrl[0].url : '';
 
       return (
         <>
@@ -265,8 +149,8 @@ export const ProductDetail = () => {
             <div className="prodWrapper">
               {prodTitle ? <div className="prodName">{prodTitle}</div> : null}
               {prodDescription ? <div className="prodDesc">{prodDescription}</div> : null}
-              {color ? <div className="prodDesc">We only have this item in {color} color today</div> : null}
-              {releaseDate ? <div className="prodDesc">Product was released in {releaseDate}</div> : null}
+              {color ? <div className="prodDesc">Color: {color}</div> : null}
+              {size ? <div className="prodDesc">Size: {size}</div> : null}
               {/* {specialAttr ? <div className="prodDesc">{specialAttr}</div> : null} */}
               {prodDiscount ? (
                 <div className="prodPrice">
@@ -288,24 +172,7 @@ export const ProductDetail = () => {
                 </Button>
               )}
             </div>
-            <Carousel
-              ref={carouselRefSmall}
-              className="slider"
-              dotPosition={'bottom'}
-              waitForAnimate={true}
-              afterChange={sliderChangedPage}
-            >
-              {carouselSlides}
-            </Carousel>
-            {masterData.masterVariant.images ? (
-              masterData.masterVariant.images.filter((n) => n.url !== '').length > 1 ? (
-                <div className="slider-buttons">
-                  <Button type="primary" className="prevSlide" onClick={openPrevSlide}></Button>
-                  <Button type="primary" className="nextSlide" onClick={openNextSlide}></Button>
-                </div>
-              ) : null
-            ) : null}
-            {modalWindow}
+            <Image style={{ width: '300px', maxWidth: '400px' }} src={prodUrlImg}></Image>
             {contextHolder}
           </div>
         </>
@@ -313,5 +180,5 @@ export const ProductDetail = () => {
     }
   }
 
-  return <>{itemData.error ? <Navigate to={'/catalog'} replace={true} /> : <div>{addCarousel()}</div>}</>;
+  return <>{itemData.error ? <Navigate to={'/catalog'} replace={true} /> : <>{addCarousel()}</>}</>;
 };
